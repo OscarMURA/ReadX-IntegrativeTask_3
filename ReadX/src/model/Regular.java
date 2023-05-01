@@ -1,3 +1,6 @@
+package model;
+import java.util.Calendar;
+
 public class Regular extends User {
 
 	/**
@@ -7,8 +10,7 @@ public class Regular extends User {
 	 * @param dateLinkage
 	 */
 	public Regular(String name, String id, Calendar dateLinkage) {
-		// TODO - implement Regular.Regular
-		throw new UnsupportedOperationException();
+		super(name, id, dateLinkage);
 	}
 
 	/**
