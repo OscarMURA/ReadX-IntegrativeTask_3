@@ -1,49 +1,72 @@
+package model;
+
+import java.util.Calendar;
+import java.util.ArrayList;
+
 public class Controller {
 
+	/**
+	 * This User Class ArrayList is for declare the program users
+	 */
+	ArrayList<User> users;
+
+	/**
+	 * method builder of the Controller Class
+	 */
 	public Controller() {
-		// TODO - implement Controller.Controller
-		throw new UnsupportedOperationException();
+		users = new ArrayList<User>();
+
 	}
 
 	/**
-	 * 
-	 * @param name
-	 * @param id
-	 * @param dateLinkage
+	 * This control method is for register the users, according if they are premium or regular
+	 * @param name user name
+	 * @param id user id
+	 * @param option 1. User regular, 2. User Premium
 	 */
-	public String registerPremium(String name, String id, Calendar dateLinkage) {
-		// TODO - implement Controller.registerPremium
-		throw new UnsupportedOperationException();
+	public String registerUser(String name, String id, int option) {
+		String msg="The user is correctly recorded "+name;
+		//Generates the income date automatically
+		Calendar dateLinkage=Calendar.getInstance();
+		User user=null;
+		switch(option){
+			case 1->user=new Regular(name, id, dateLinkage);
+			case 2->user=new Premium(name, id, dateLinkage);
+		}
+		users.add(user);
+		return msg;
 	}
 
 	/**
+	 * This control method is for search User by his id
 	 * 
-	 * @param name
-	 * @param id
-	 * @param dateLinkage
+	 * @param id user id
+	 * @return User 
 	 */
-	public String registerRegular(String name, String id, Calendar dateLinkage) {
-		// TODO - implement Controller.registerRegular
-		throw new UnsupportedOperationException();
+	public User searchUser(String id){
+		User user=null;
+		boolean isFound=false;
+		for (int i = 0; i < users.size()&&!isFound; i++) {
+			if(users.get(i).getID().equalsIgnoreCase(id)){
+				isFound=true;
+			}
+		}
+		return user;
 	}
-
 	/**
-	 * 
+	 * This method verify that not repeat the users
 	 * @param id
+	 * @return false= id User no exist, true= id user exist
 	 */
 	public boolean verifyNoRepeatUser(String id) {
-		// TODO - implement Controller.verifyNoRepeatUser
-		throw new UnsupportedOperationException();
+		boolean repeat=false;
+		if((searchUser(id)!=null)){
+			repeat=true;
+		}
+		return repeat;
 	}
 
-	/**
-	 * 
-	 * @param id
-	 */
-	public User searchUser(String id) {
-		// TODO - implement Controller.searchUser
-		throw new UnsupportedOperationException();
-	}
+
 
 	/**
 	 * 
@@ -56,7 +79,8 @@ public class Controller {
 	 * @param emission
 	 * @param type
 	 */
-	public String registerMagazine(String hexa, String name, int amountPag, Calendar datePublication, String url, double value, int emission, Model.TypeMagazine type) {
+	public String registerMagazine(String hexa, String name, int amountPag, Calendar datePublication, String url,
+			double value, int emission, TypeMagazine type) {
 		// TODO - implement Controller.registerMagazine
 		throw new UnsupportedOperationException();
 	}
@@ -71,7 +95,8 @@ public class Controller {
 	 * @param value
 	 * @param type
 	 */
-	public String registerBook(String hexa, String name, int amountPag, Calendar datePublication, String url, double value, TypeBook type) {
+	public String registerBook(String hexa, String name, int amountPag, Calendar datePublication, String url,
+			double value, TypeBook type) {
 		// TODO - implement Controller.registerBook
 		throw new UnsupportedOperationException();
 	}
@@ -95,7 +120,8 @@ public class Controller {
 	 * @param typeProduct
 	 * @param typeOption
 	 */
-	public String modifiedProductBibliographic(String name, int amountPag, Calendar datePublication, String url, double value, int typeProduct, int[] typeOption) {
+	public String modifiedProductBibliographic(String name, int amountPag, Calendar datePublication, String url,
+			double value, int typeProduct, int[] typeOption) {
 		// TODO - implement Controller.modifiedProductBibliographic
 		throw new UnsupportedOperationException();
 	}
