@@ -3,10 +3,10 @@ import java.util.Calendar;
 public class Premium extends User {
 
 	/**
-	 * 
-	 * @param name
-	 * @param id
-	 * @param dateLinkage
+	 * this constructor method of the premium class
+	 * @param name User name
+	 * @param id User id
+	 * @param dateLinkage User income date
 	 */
 	public Premium(String name, String id, Calendar dateLinkage){
 		super(name, id, dateLinkage);

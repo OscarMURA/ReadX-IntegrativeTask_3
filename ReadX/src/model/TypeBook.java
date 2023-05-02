@@ -1,8 +1,19 @@
-public enum TypeBook {
-	;
+package model;
 
-	private int SCIENCE_FICTION;
-	private int FANTASY;
-	private int HISTORICAL_NOVEL;
 
+public enum TypeBook{
+
+	SCIENCE_FICTION("Science Fiction"),
+	FANTASY("Fantasy"),
+	HISTORICAL_NOVEL("Historical Novel");
+
+	private String value;
+
+	TypeBook(String value){
+		this.value=value;
+	}
+	public String getValue(){
+		return value;
+	}
+	
 }

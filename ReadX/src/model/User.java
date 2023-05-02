@@ -10,10 +10,10 @@ public abstract class User {
 	private Calendar dateLinkage;
 
 	/**
-	 * 
-	 * @param name
-	 * @param id
-	 * @param dateLinkage
+	 * this constructor method of the parent User class
+	 * @param name User name
+	 * @param id User id
+	 * @param dateLinkage User income date
 	 */
 	public User(String name, String id, Calendar dateLinkage) {
 		this.name=name;

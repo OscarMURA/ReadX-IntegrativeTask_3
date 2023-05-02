@@ -4,10 +4,10 @@ import java.util.Calendar;
 public class Regular extends User {
 
 	/**
-	 * 
-	 * @param name
-	 * @param id
-	 * @param dateLinkage
+	 * this constructor method of the regular class
+	 * @param name User name
+	 * @param id User id
+	 * @param dateLinkage User income date
 	 */
 	public Regular(String name, String id, Calendar dateLinkage) {
 		super(name, id, dateLinkage);

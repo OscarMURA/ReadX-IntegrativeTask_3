@@ -1,8 +1,11 @@
-public enum TypeMagazine {
-	;
+package model;
 
-	private int VARIETIES;
-	private int DESING;
-	private int SCIENTIST;
+
+public enum TypeMagazine {
+	
+
+	 VARIETIES,
+	 DESING,
+	 SCIENTIST;
 
 }

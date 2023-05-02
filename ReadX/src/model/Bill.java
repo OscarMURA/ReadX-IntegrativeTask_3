@@ -1,3 +1,6 @@
+package model;
+import java.util.Calendar;
+
 public class Bill {
 
 	private String valueProduct;
