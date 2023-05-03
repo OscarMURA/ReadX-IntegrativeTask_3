@@ -2,8 +2,8 @@ package model;
 import java.util.Calendar;
 
 public class Magazine extends Bibliographic {
-
-	private int emission;
+	private TypeMagazine type;
+	private Emission emission;
 
 	/**
 	 * this buiilder method of the Magazine class
@@ -16,8 +16,39 @@ public class Magazine extends Bibliographic {
 	 * @param emission The amount of duration in the emission of the magazine
 	 * @param type Mazazine type
 	 */
-	public Magazine(String codeId, String name, int amountPag, Calendar datePublication, String url, double value, int emission, TypeMagazine type) {
+	public Magazine(String codeId, String name, int amountPag, Calendar datePublication, String url, double value, Emission emission, TypeMagazine type) {
 		super(codeId, name, amountPag, datePublication, url, value);
+		this.type=type;
+		this.emission=emission;
+	}
+	
+	/**
+	 * This control method save the new TypeMagazine of the Magazine
+	 * @param type TypeMagazine
+	 */
+	public void setType(TypeMagazine type) {
+		this.type = type;
+	}
+	public enum TypeMagazine {
+	
+
+		VARIETIES,
+		DESING,
+		SCIENTIST;
+   	}
+
+	public enum Emission{
+		MONTHLY,
+		QUARTERLY,
+		BIANNUAL,
+		ANNUAL;
+	}
+	/**
+	 * The control method save the new emission type
+	 * @param emission
+	 */
+	public void setEmission(Emission emission) {
+		this.emission = emission;
 	}
 
 }

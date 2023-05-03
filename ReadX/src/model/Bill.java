@@ -22,4 +22,6 @@ public class Bill {
 		throw new UnsupportedOperationException();
 	}
 
+	
+
 }

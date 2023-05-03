@@ -35,11 +35,48 @@ public abstract class Bibliographic {
 		return name;
 	}
 	/**
-	 * This control method
+	 * This method save the new name
+	 * @param name String: Bibliographic product name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	/**
+	 * This method save the new AmountPage
+	 * @param AmountPag int: Bibliographic product AmountPage
+	 */
+	public void setAmountPag(int amountPag) {
+		this.amountPag = amountPag;
+	}
+	/**
+	 * This method save the new datePublication
+	 * @param datePublication Calendar: Bibliographic product datePublication
+	 */
+	public void setDatePublication(Calendar datePublication) {
+		this.datePublication = datePublication;
+	}
+	/**
+	 * This method save the new product or subscription value
+	 * @param value double: Bibliographic product value
+	 */
+	public void setValue(double value) {
+		this.value = value;
+	}
+	/**
+	 * This control method 
 	 * @return Bibliographic identification id
 	 */
 	public String getCodeId() {
 		return codeId;
 	}
+	/**
+	 * This control method save the new product url
+	 * @param Bibliographic product url
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
+
 
 }
