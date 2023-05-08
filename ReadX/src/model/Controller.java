@@ -19,16 +19,17 @@ public class Controller {
 	ArrayList<Bibliographic> bibliographics;
 	private String msg;
 	private Random random;
-
+	private User currentUser;
 
 	/**
 	 * method builder of the Controller Class
 	 */
-	public Controller(){
+	public Controller() {
 		users = new ArrayList<User>();
 		bibliographics = new ArrayList<Bibliographic>();
 		msg = "";
 		random = new Random();
+		currentUser = null;
 	}
 
 	/**
@@ -62,9 +63,10 @@ public class Controller {
 		User user = null;
 		boolean isFound = false;
 		for (int i = 0; i < users.size() && !isFound; i++) {
-			if (users.get(i).getID().equalsIgnoreCase(id)||users.get(i).getName().equalsIgnoreCase(id)) {
+			if (users.get(i).getID().equalsIgnoreCase(id) || users.get(i).getName().equalsIgnoreCase(id)) {
 				isFound = true;
 				user = users.get(i);
+				currentUser = user;
 			}
 		}
 		return user;
@@ -88,8 +90,8 @@ public class Controller {
 	 */
 	public String registerBibliographicProduct(int option, String name, int amountPag,
 			Calendar datePublication, String url, double value, int emission, int type, String review) {
-
 		msg = "The " + name + " product was registered sucessfully";
+
 		String codeId = generationAlfaAndHexaDecimal(option);
 		Bibliographic bibliographic = null;
 		switch (option) {
@@ -212,8 +214,8 @@ public class Controller {
 	 * @param wordKey bibliographicProduct name or identification id
 	 * @return 1.Book intance or 2.Magazine Intance
 	 */
-	public int decideIntanceOfBibliographic(String wordKey) {
-		int infaceOf = 0;
+	public int intanceOfBibliographic(String wordKey) {
+		int infaceOf = -1;
 		Bibliographic product = null;
 		product = searchBibliographic(wordKey);
 		if (product instanceof Book) {
@@ -266,20 +268,17 @@ public class Controller {
 			msg += "\n Url \2";
 		}
 		if (emission != 0) {
-			Emission typeEmission = null;
-			typeEmission = assignTypeEmission(emission);
+			Emission typeEmission = assignTypeEmission(emission);;
 			((Magazine) product).setEmission(typeEmission);
 			msg += "\n Emission \2";
 		}
 		if (typeProduct != 0) {
 			if (product instanceof Book) {
-				TypeBook typeBook = null;
-				typeBook = assignTypeBook(typeProduct);
+				TypeBook typeBook = assignTypeBook(typeProduct);
 				((Book) product).setType(typeBook);
 
 			} else if (product instanceof Magazine) {
-				TypeMagazine typeMagazine = null;
-				typeMagazine = assignTypeMagazine(typeProduct);
+				TypeMagazine typeMagazine = assignTypeMagazine(typeProduct);
 				((Magazine) product).setType(typeMagazine);
 			}
 			msg += "\n Type product \2";
@@ -304,7 +303,9 @@ public class Controller {
 	}
 
 	/**
-	 * This Control Method performs a start test to create 10 regular users and premium, also for books and magazines
+	 * This Control Method performs a start test to create 10 regular users and
+	 * premium, also for books and magazines
+	 * 
 	 * @return The information of the object create
 	 */
 	public String testInit() {
@@ -319,13 +320,13 @@ public class Controller {
 
 		for (j = 0; j < 10; j++) {
 			name = "Regular " + (j);
-			id = String.valueOf(random.nextInt(Integer.MAX_VALUE));
+			id = String.valueOf(random.nextInt((int) 1e6));
 			user = new Regular(name, id, date);
 			users.add(user);
 			msg += "\4User: " + name + "\tid: " + id + "\n";
 
 			name = "Premium " + j;
-			id = String.valueOf(random.nextInt(Integer.MAX_VALUE));
+			id = String.valueOf(random.nextInt((int) 1e6));
 			user = new Premium(name, id, date);
 			users.add(user);
 			msg += "\4User: " + name + "\tid: " + id + "\n";
@@ -354,22 +355,67 @@ public class Controller {
 					bibliographic = new Magazine(id, name, amountPag, date, url, productValue, typeEmission,
 							typeMagazine);
 				}
-				msg +="\4"+ name + "->  code: " + id+"\n";
+				msg += "\4" + name + "->  code: " + id + "\n";
 				bibliographics.add(bibliographic);
 			}
-			msg+="\n\n";
+			msg += "\n\n";
+		}
+		return msg;
+	}
+
+	/**
+	 * This control method
+	 * 
+	 * @return Returns to the current user
+	 */
+	public User getCurrentUser() {
+		return currentUser;
+	}
+	/**
+	 * 
+	 * @param wordKey
+	 */
+	public String BuyProduct(String wordKey, double value) {
+		Calendar buyDate = Calendar.getInstance();
+		msg = "";
+		int pos = 0;
+		int intance = intanceOfBibliographic(wordKey);
+		String typeBook = "";
+		typeBook = (intance == 1) ? " Purchase of the book: " : " Subscription of the Magazine: ";
+		Bibliographic product = searchBibliographic(wordKey);
+		ArrayList<Bill> bill;
+
+		msg = "We already registered you " + typeBook + product.getName() + " To your gallery";
+
+		if ((intance == 1 && ((Regular) currentUser).counterProduct(1) < 5)
+				|| (intance == 2 && ((Regular) currentUser).counterProduct(2) < 2)
+				|| (currentUser instanceof Premium)) {
+			bill = currentUser.getBills();
+			bill.add(new Bill(String.valueOf(value), buyDate));
+			pos = bill.size() + (-1);// Returns the position of the last added data
+			pos = (pos == -1) ? 0 : pos;
+			bill.get(pos).setProduct(product);
+			product.addBill(bill.get(pos));
+		} else {
+			msg = "We couldn't record your" + typeBook + product.getName() + " By already you have full storage";
 		}
 
 		return msg;
 	}
 
-	/**
-	 * 
-	 * @param identificationProduct
-	 */
-	public String BuyProduct(String identificationProduct) {
-		// TODO - implement Controller.BuyProduct
-		throw new UnsupportedOperationException();
+	public String deleteMagazineSubscrition(String wordKey){
+		msg="";
+		boolean isFound=false;
+		ArrayList<Bill> bills=currentUser.getBills();
+		for (int i = 0; i < bills.size()&&!isFound; i++) {
+			Bibliographic magazine=bills.get(i).getProduct();
+			if(magazine.getCodeId().equalsIgnoreCase(wordKey)|| magazine.getName().equalsIgnoreCase(wordKey)){
+				bills.remove(bills.get(i));
+				isFound=true;
+				msg="The magazine program has already been subscribed: "+wordKey;
+			}
+		}
+		return msg;
 	}
 
 }

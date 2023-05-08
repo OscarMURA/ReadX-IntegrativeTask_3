@@ -5,21 +5,33 @@ public class Bill {
 
 	private String valueProduct;
 	private Calendar dateBuy;
+	private Bibliographic product;
 
+	
 	/**
-	 * 
-	 * @param IdProduct
-	 * @param valueProduct
-	 * @param dateBuy
+	 * bill Builder method
+	 * @param valueProduct product value
+	 * @param dateBuy buy date
 	 */
-	public Bill(String IdProduct, int valueProduct, Calendar dateBuy) {
-		// TODO - implement Bill.Bill
-		throw new UnsupportedOperationException();
+	public Bill(String valueProduct, Calendar dateBuy) {
+		this.valueProduct = valueProduct;
+		this.dateBuy = dateBuy;
 	}
 
-	public Bibliographic getProductBibliographic() {
-		// TODO - implement Bill.getProductBibliographic
-		throw new UnsupportedOperationException();
+	/**
+	 * This method for add the product buy
+	 * @param product Blibliographic product (Magazine or Book)
+	 */
+	public void setProduct(Bibliographic product) {
+		this.product = product;
+	}
+	
+	/**
+	 * This method returns the bibliographic product that is related to the invoice
+	 * @return bibliographic product
+	 */
+	public Bibliographic getProduct() {
+		return product;
 	}
 
 	

@@ -1,6 +1,10 @@
 package model;
+import java.util.ArrayList;
 import java.util.Calendar;
+
+
 public class Premium extends User {
+
 
 	/**
 	 * this constructor method of the premium class
@@ -10,16 +14,7 @@ public class Premium extends User {
 	 */
 	public Premium(String name, String id, Calendar dateLinkage){
 		super(name, id, dateLinkage);
-	}
 
-	/**
-	 * 
-	 * @param name
-	 * @param hexa
-	 */
-	public String addProduct(String name, String hexa) {
-		// TODO - implement Premium.addProduct
-		throw new UnsupportedOperationException();
 	}
 
 }

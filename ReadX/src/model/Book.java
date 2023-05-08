@@ -13,9 +13,9 @@ public class Book extends Bibliographic {
 	 * @param datePublication Bibliographic product date publication
 	 * @param url Bibliographic product url
 	 * @param value Bibliographic product value of the price or subscrition of the product
-	 * @param type2 book type
+	 * @param type book type
 	 */
-	public Book(String codeId, String name, int amountPag, Calendar datePublication, String url, double value, int type2, String review) {
+	public Book(String codeId, String name, int amountPag, Calendar datePublication, String url, double value, TypeBook type, String review) {
 		super(codeId, name, amountPag, datePublication, url, value);
 		this.review=review;
 		this.type=type;

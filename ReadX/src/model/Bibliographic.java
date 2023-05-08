@@ -1,4 +1,5 @@
 package model;
+import java.util.ArrayList;
 import java.util.Calendar;
 public abstract class Bibliographic {
 
@@ -7,6 +8,7 @@ public abstract class Bibliographic {
 	private Calendar datePublication;
 	private String url;
 	private double value;
+	private ArrayList<Bill> bills;
 
 	private String codeId;
 
@@ -26,6 +28,7 @@ public abstract class Bibliographic {
 		this.datePublication=datePublication;
 		this.url=url;
 		this.value=value;
+		bills=new ArrayList<Bill>();
 	}
 	/**
 	 * This control method 
@@ -64,6 +67,13 @@ public abstract class Bibliographic {
 	}
 	/**
 	 * This control method 
+	 * @return Bibliographic identification value
+	 */
+	public double getValue() {
+		return value;
+	}
+	/**
+	 * This control method 
 	 * @return Bibliographic identification id
 	 */
 	public String getCodeId() {
@@ -76,7 +86,20 @@ public abstract class Bibliographic {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+	/**
+	 * This control method
+	 * @return Returns the arrangement to add current bill
+	 */
+	public ArrayList<Bill> getBills() {
+		return bills;
+	}
+	/**
+	 * This Medoto adds the current invoices related to this product
+	 * @param bill Object Bill
+	 */
+	public void addBill(Bill bill){
+		this.bills.add(bill);
+	}
 
 
 }

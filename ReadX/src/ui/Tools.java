@@ -24,6 +24,7 @@ public class Tools {
 			line = scanner.next();
 			scanner.useDelimiter("\\p{javaWhitespace}+");
 		} while (line.equalsIgnoreCase(""));
+
 		return line;
 	}
 
@@ -51,6 +52,7 @@ public class Tools {
 			if (reader.hasNextDouble()) {
 				option = reader.nextDouble();
 			} else {
+				
 				reader.next();// limpiar el scanner
 				System.out.println("\tInvalid number!");
 				System.out.print("\tConrrently Type: ");
