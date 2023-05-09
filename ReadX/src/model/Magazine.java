@@ -29,20 +29,7 @@ public class Magazine extends Bibliographic {
 	public void setType(TypeMagazine type) {
 		this.type = type;
 	}
-	public enum TypeMagazine {
-	
 
-		VARIETIES,
-		DESING,
-		SCIENTIST;
-   	}
-
-	public enum Emission{
-		MONTHLY,
-		QUARTERLY,
-		BIANNUAL,
-		ANNUAL;
-	}
 	/**
 	 * The control method save the new emission type
 	 * @param emission

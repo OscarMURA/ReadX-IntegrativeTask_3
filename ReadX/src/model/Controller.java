@@ -3,9 +3,6 @@ package model;
 import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.Random;
-import model.Book.TypeBook;
-import model.Magazine.Emission;
-import model.Magazine.TypeMagazine;
 
 public class Controller {
 
@@ -268,7 +265,8 @@ public class Controller {
 			msg += "\n Url \2";
 		}
 		if (emission != 0) {
-			Emission typeEmission = assignTypeEmission(emission);;
+			Emission typeEmission = assignTypeEmission(emission);
+			;
 			((Magazine) product).setEmission(typeEmission);
 			msg += "\n Emission \2";
 		}
@@ -371,51 +369,93 @@ public class Controller {
 	public User getCurrentUser() {
 		return currentUser;
 	}
+
 	/**
-	 * 
-	 * @param wordKey
+	 * This control method verifies the type of book that is the book, and only the
+	 * purchase of products will be recorded if you are an user, or if you are
+	 * regular you can register books if you have less than 5 or magazines less than
+	 * 2. Aditional, this method verify that the regular user no do a buy bug, for
+	 * buy more of your limit
+	 * @param wordKey Name or ID of bibliographic products
 	 */
-	public String BuyProduct(String wordKey, double value) {
+	public String BuyProduct(ArrayList<String> wordKeys, double totalValue) {
+		int book=0, magazine=0;
 		Calendar buyDate = Calendar.getInstance();
 		msg = "";
+		String noSave="";
 		int pos = 0;
-		int intance = intanceOfBibliographic(wordKey);
-		String typeBook = "";
-		typeBook = (intance == 1) ? " Purchase of the book: " : " Subscription of the Magazine: ";
-		Bibliographic product = searchBibliographic(wordKey);
-		ArrayList<Bill> bill;
-
-		msg = "We already registered you " + typeBook + product.getName() + " To your gallery";
-
-		if ((intance == 1 && ((Regular) currentUser).counterProduct(1) < 5)
-				|| (intance == 2 && ((Regular) currentUser).counterProduct(2) < 2)
-				|| (currentUser instanceof Premium)) {
-			bill = currentUser.getBills();
-			bill.add(new Bill(String.valueOf(value), buyDate));
-			pos = bill.size() + (-1);// Returns the position of the last added data
-			pos = (pos == -1) ? 0 : pos;
-			bill.get(pos).setProduct(product);
-			product.addBill(bill.get(pos));
-		} else {
-			msg = "We couldn't record your" + typeBook + product.getName() + " By already you have full storage";
+		ArrayList<Bibliographic> products = new ArrayList<Bibliographic>();
+		Bibliographic product = null;
+		Bill bill = null;
+		if(currentUser instanceof Regular){//
+			book=((Regular) currentUser).counterProduct(1);
+			magazine=((Regular) currentUser).counterProduct(2);
 		}
-
-		return msg;
-	}
-
-	public String deleteMagazineSubscrition(String wordKey){
-		msg="";
-		boolean isFound=false;
-		ArrayList<Bill> bills=currentUser.getBills();
-		for (int i = 0; i < bills.size()&&!isFound; i++) {
-			Bibliographic magazine=bills.get(i).getProduct();
-			if(magazine.getCodeId().equalsIgnoreCase(wordKey)|| magazine.getName().equalsIgnoreCase(wordKey)){
-				bills.remove(bills.get(i));
-				isFound=true;
-				msg="The magazine program has already been subscribed: "+wordKey;
+		for (int i = 0; i < wordKeys.size(); i++) {
+			if(currentUser instanceof Regular){
+				if(intanceOfBibliographic(wordKeys.get(i))==1){
+					book+=1;
+				}else{
+					magazine+=1;
+				}
+			}
+			product = searchBibliographic(wordKeys.get(i));
+			if( (currentUser instanceof Premium ) || (product instanceof Book &&  book<=5) || (product instanceof Magazine &&  book<=2)){
+				products.add(product);
+			}
+			else{
+				noSave+="\nThis product "+product.getName()+". It is not added by overcoming the purchase limit of this type.";
 			}
 		}
-		return msg;
+		products.remove(null);
+		bill = new Bill(totalValue, buyDate, products);
+		currentUser.addBill(bill);
+		msg = bill.toString();
+		return msg+noSave;
 	}
 
+	/**
+	 * This method verifies if the user can buy 1.Boor or Magazine if it is a
+	 * regular user, if it is Premium, it passes the test, it means that it
+	 * can*
+	 * 
+	 * @param option 1.Book or 2.Magazine
+	 * @return true: The user can Buy Prodcut bibliographic
+	 */
+	public boolean CheckingCheck(int option) {
+		boolean canBuy = false;
+		if((currentUser instanceof Premium)){
+			canBuy=true;
+		}
+		else if( option==1 && ((Regular) currentUser).counterProduct(1) < 5){
+			canBuy=true;
+		}else if( option==2&& ((Regular) currentUser).counterProduct(2) < 2){
+			canBuy=true;
+		}
+		return canBuy;
+	}
+
+	
+	/**
+	 * Este metodo se encarga para eliminar la susc
+	 * 
+	 * @param wordKey
+	 * @return
+	 */
+	public String eliminateMagazineSubscrition(String wordKey) {
+		boolean isFound = false;
+		Bibliographic product=currentUser.alreadyHasProduct(wordKey);
+		return currentUser.eliminateMagazineSuscription(product);
+	}
+
+	public String read(int option, String wordKey) {
+		Bibliographic product = currentUser.alreadyHasProduct(wordKey);
+		msg = "Seccion de lectura en proceso: ";
+		msg += "Leyendo:  " + product.getName();
+		if (option == 1) {
+
+		}
+		return msg;
+
+	}
 }

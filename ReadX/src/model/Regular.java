@@ -19,21 +19,6 @@ public class Regular extends User {
 		super(name, id, dateLinkage);
 	}
 
-	// /**
-	// * This method is to add the purchasing invoices made and in force
-	// * @return Book ArrayList
-	// */
-	// public ArrayList<Bill> getBillBook() {
-	// return billBook;
-	// }
-
-	// /**
-	// * This method is to add the purchasing invoices made and in force
-	// * @return Magazine ArrayList
-	// */
-	// public ArrayList<Bill> getBillMagazine() {
-	// return billMagazine;
-	// }
 
 	/**
 	 * This method is responsible for counting the products bought from the regular
@@ -45,13 +30,16 @@ public class Regular extends User {
 	public int counterProduct(int option) {
 		int amount = 0;
 		removeBillWihtProductDelete();
-		for (int i = 0; i < bills.size(); i++) {
-			if (option == 1 && bills.get(i).getProduct() instanceof Book) {
-				amount++;
+		for (int i = 0; i < bills.size(); i++) {//Loop to tour Bills's arrangement
+			for (int j = 0; j < bills.get(i).getProducts().size(); j++) {//Loop to tour the arrangement of bibliographic products
+				if (option==1 && bills.get(i).getProducts().get(j) instanceof Book){
+					amount++;
+				}
+				if (option==2 && bills.get(i).getProducts().get(j) instanceof Magazine){
+					amount++;
+				}
 			}
-			if (option == 2 && bills.get(i).getProduct() instanceof Magazine) {
-				amount++;
-			}
+			
 		}
 		return amount;
 	}

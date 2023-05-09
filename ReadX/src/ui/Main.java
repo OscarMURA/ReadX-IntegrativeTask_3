@@ -2,8 +2,10 @@ package ui;
 
 import model.Controller;
 import java.util.Scanner;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.Random;
 import model.Bibliographic;
@@ -49,7 +51,7 @@ public class Main {
 
 				} while (option != 0);
 
-				option=-1;
+				option = -1;
 			} else if (option == 2) {
 
 				do {
@@ -69,15 +71,20 @@ public class Main {
 							} while (option < 1 && option > 2);
 							main.executionUser(option);
 						} while (option != 0);
-					}else if(option!=0){
+					} else if (option != 0) {
 						println("No exits this user");
 					}
 				} while (option != 0);
-				option =-1;
+				option = -1;
 			}
 		} while (option != 0);
 	}
 
+	/**
+	 * This method shows the different types of menus
+	 * 
+	 * @param option 1. Manager menu, 2. User Preringress Menu or 3. User Menu
+	 */
 	public static void menu(int option) {
 		if (option == 1) {
 			println("\4 1. Register Bibliographic products\n\4 2.Modify Bibliograpic product\n\4 3.Delete Bibliographic Products");
@@ -89,7 +96,12 @@ public class Main {
 		}
 	}
 
-
+	/**
+	 * User Income Control Method
+	 * 
+	 * @param option 1.Register User 2.Login User
+	 * @return true: register user or exist user
+	 */
 	public boolean execution(int option) {
 		boolean allow = false;
 		switch (option) {
@@ -99,6 +111,11 @@ public class Main {
 		return allow;
 	}
 
+	/**
+	 * METHOD FOR MANAGE OPTIONS
+	 * 
+	 * @param option 1.Register 2.Modify 3.Delete 4.Show TestInit
+	 */
 	public void executionManager(int option) {
 		switch (option) {
 			case 1 -> registerBibliographicProduct();
@@ -112,20 +129,27 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Control method for user options
+	 * 
+	 * @param option 1.Buy Product 2.Eleminate Magazine
+	 */
 	public void executionUser(int option) {
 		switch (option) {
 			case 1 -> BuyBibliographicProduct();
-			case 2 -> deleteMagazineSubscription();
+			case 2 -> eliminateMagazineSubscription();
 		}
 	}
 
 	/**
 	 * println Method
+	 * 
 	 * @param println Object for print with line jump
 	 */
 	public static void println(Object println) {
 		System.out.println(println);
 	}
+
 	/**
 	 * print Method
 	 * 
@@ -134,6 +158,7 @@ public class Main {
 	public static void print(Object print) {
 		System.out.print(print);
 	}
+
 	/**
 	 * Decoration method to separate functionalities
 	 */
@@ -165,7 +190,8 @@ public class Main {
 	}
 
 	/**
-	 * 
+	 * This method records the bibliographic products, according to the type of book
+	 * that the user wants to appear options for such own regitters
 	 */
 	public void registerBibliographicProduct() {
 		int option = 0, amountPag = 0, type = 0, emission = 0;
@@ -190,7 +216,7 @@ public class Main {
 		productName = assignName(product);
 		amountPag = assignAmountPag(product);
 		url = assignUrl();
-		datePublication = assignDatePublication(product);
+		datePublication = assingDate();
 		productValue = assignProductValue(product);
 		type = assignProductType(product, option);
 
@@ -241,27 +267,8 @@ public class Main {
 	}
 
 	/**
-	 * This view method assign the date publication of the product
-	 * 
-	 * @param product Type product ("Book" or "Magazine")
-	 * @return product date publication
-	 */
-	public Calendar assignDatePublication(String product) {
-		Calendar datePublication = Calendar.getInstance();
-		boolean isBefore = false;
-		do {
-			Calendar now = Calendar.getInstance();
-			datePublication = assingDate();
-			isBefore = datePublication.before(now);
-			if (!isBefore) {
-				println("\tYou must enter the date, at the moment you cannot place products without premiere");
-			}
-		} while (!isBefore);
-		return datePublication;
-	}
-
-	/**
 	 * This view method assign the value of the product
+	 * 
 	 * @param product Type product ("Book" or "Magazine")
 	 * @return product value
 	 */
@@ -276,6 +283,7 @@ public class Main {
 
 	/**
 	 * This view method assign the each product type
+	 * 
 	 * @param product "Book" or "Magazine"
 	 * @param option  1.Book or 2.Magazine
 	 * @return product type such as option number
@@ -300,6 +308,7 @@ public class Main {
 
 	/**
 	 * This view method assign the emission of the Magazine
+	 * 
 	 * @param product Type product ("Book" or "Magazine")
 	 * @return emission Type of the Magazine
 	 */
@@ -321,7 +330,7 @@ public class Main {
 		print("\4Type ulr exclusive: ");
 		url = reader.next();
 		url = url.toUpperCase() + "." + typeIma[random.nextInt(typeIma.length)];
-		println("Your url: "+url);
+		println("Your url: " + url);
 		return url;
 	}
 
@@ -334,7 +343,9 @@ public class Main {
 	 */
 	public Calendar assingDate() {
 		Calendar dateCal = Calendar.getInstance();
+		Calendar now = Calendar.getInstance();
 		boolean follow;
+		boolean isBefore = false;
 		println("\n\4Type date publication: dd-MM-yyyy ->Exa: 22-02-2023");
 		do {
 			follow = false;
@@ -346,6 +357,11 @@ public class Main {
 				follow = true;
 			} catch (ParseException e) {
 				println("\n\t¡Please enter date correctly!");
+			}
+
+			isBefore = dateCal.before(now);
+			if (!isBefore && follow) {
+				println("\tYou must enter the date, at the moment you cannot place products without premiere");
 			}
 		} while (!follow);
 		return dateCal;
@@ -376,13 +392,13 @@ public class Main {
 				} else {
 					println("\t\4 7.Book review");
 				}
-				print("Type option (exit=0): ");
+				print("Type option (save=0): ");
 				option = tools.validateInt();
 				switch (option) {
 					case 0 -> println("Exit");
 					case 1 -> productName = assignName(product);
 					case 2 -> amountPag = assignAmountPag(product);
-					case 3 -> datePublication = assignDatePublication(product);
+					case 3 -> datePublication = assingDate();
 					case 4 -> productValue = assignProductValue(product);
 					case 5 -> type = assignProductType(product, typeProduct);
 					case 6 -> url = assignUrl();
@@ -421,10 +437,12 @@ public class Main {
 		}
 		println(msg);
 	}
+
 	/**
 	 * This method focuses on looking for the user, to start in a registered account
-	*  @return True: the user exists, or false: the user does not exist
-	*/
+	 * 
+	 * @return True: the user exists, or false: the user does not exist
+	 */
 	public static boolean searchUser() {
 		String name = "", id = "";
 		boolean isFound = false;
@@ -440,68 +458,96 @@ public class Main {
 	}
 
 	/**
-	 * This view method focuses to search for a product and register it in the systems
+	 * This view method focuses to search for a product and register it in the
+	 * systems
 	 */
 	public void BuyBibliographicProduct() {
+		ArrayList<String> wordKeys = new ArrayList<String>();
 		String wordKey = "", type = "", msg = "";
 		int intance = 0;
-		double value = 0, realValue = 0;
+		double value = 0, realValue = 0, totalValue = 0;
+		
+
 		tools.lines();
 		tools.title("Buy Product Bibliographic");
-		print("Correctly type code or name: ");
-		wordKey = tools.read(reader);
-		if (controller.searchBibliographic(wordKey) != null) {
+		do {
 
-			if (controller.getCurrentUser().alreadyHasProduct(wordKey)) {
-				println("You already have this book in your library");
+			print("Correctly typoe code or name (Save=\"0\"): ");
+			wordKey = tools.read(reader);
+			if (controller.searchBibliographic(wordKey) != null && !(wordKey.equals("0"))) {
+				if (controller.getCurrentUser().alreadyHasProduct(wordKey) != null) {
+					println("You already have this book in your library");
+				} else {
 
-			} else {
-				intance = controller.intanceOfBibliographic(wordKey);
-				realValue = controller.searchBibliographic(wordKey).getValue();
-				type = (intance == 1) ? "Book value" : "Magazine subcription";
-				println(type+": "+realValue+"\n");
-				do {
-					print("Correctly " + type + ": ");
-					value = tools.validateDouble();
-					if (value < realValue) {
-						println("You must enter a value equal to or greater than " + realValue);
+					intance = controller.intanceOfBibliographic(wordKey);
+					type = (intance == 1) ? "Book value" : "Magazine subcription";
+					if (controller.CheckingCheck(intance)) {
+
+						realValue = controller.searchBibliographic(wordKey).getValue();
+						println(type + " is: " + realValue + "\n");
+						do {
+							print("Correctly " + type + " to pay: ");
+							value = tools.validateDouble();
+							if (value < realValue) {
+								println("You must enter a value equal to or greater than " + realValue);
+							}
+						} while (!(value >= realValue));
+						totalValue += value;
+						wordKeys.add(wordKey);// Add the names of the products to names
+
+					} else {
+						println("You can't buy this product: "+wordKey+" "+type+" The library of this type is filled");
 					}
-				} while (!(value >= realValue));
-				msg = controller.BuyProduct(wordKey, realValue);
-				println(msg);
-				println("Total to pay: $" + realValue);
-				println("Money entered: $" + value);
-				println("Money to deliver to the user: $" + (value - realValue));
+				}
+			} else if (!(wordKey.equals("0"))) {
+				println("No exist the product: " + wordKey);
 			}
-		} else {
-			println("No exist the product: " + wordKey);
-		}
+
+		} while (!(wordKey.equals("0")));
+
 	}
+
 	/**
 	 * The view method is to eliminate subscriptions with user magazines
 	 */
-	public void deleteMagazineSubscription() {
-		String wordKey="";
+	public void eliminateMagazineSubscription() {
+		String wordKey = "";
 		tools.lines();
 		tools.title("Cancel Magazine Subscription");
 		print("Type name or id: ");
-		wordKey=tools.read(reader);
-		if(controller.getCurrentUser().alreadyHasProduct(wordKey)){
-			if(controller.intanceOfBibliographic(wordKey)==2){
-			}else{
+		wordKey = tools.read(reader);
+		if (controller.getCurrentUser().alreadyHasProduct(wordKey) != null) {
+			if (controller.intanceOfBibliographic(wordKey) == 2) {
+				controller.eliminateMagazineSubscrition(wordKey);
+			} else {
 				println("This product not is a Magazine");
 			}
-
-		}else{
+		} else {
 			println("No exist this Product in your library");
 		}
 	}
-	public void read(){
-		String wordKey="";
+
+	public void read() {
+		String wordKey = "";
+		int option = 0;
 		tools.lines();
 		tools.title("Read Bibliographic Product");
+		println("Product: ");
+		print("\nType the product: ");
+		wordKey = tools.read(reader);
+		if (controller.getCurrentUser().alreadyHasProduct(wordKey) != null) {
+			do {
+				print("1.Next Page\n2.Back Page\n3.Back Menu User ");
+				do {
+					print("Correctly type: ");
+					option = tools.validateInt();
+				} while (option < 1 && option > 3);
 
+			} while (option != 3);
 
+		} else {
+			println("Product not exits");
+		}
 
 	}
 

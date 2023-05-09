@@ -1,6 +1,5 @@
 
 package model;
-
 import java.util.Calendar;
 import java.util.ArrayList;
 
@@ -43,30 +42,19 @@ public abstract class User {
 	}
 
 	/**
-	 * This method verifies if there is already the bibliographic product in the
-	 * user library
-	 * 
-	 * @param wordKey Bibliographic product name or id
-	 * @return true=exist or false: no exist
-	 */
-	public boolean alreadyHasProduct(String wordKey) {
-		boolean exist = false;
-		for (int i = 0; i < bills.size() && !exist; i++) {
-			Bibliographic product = bills.get(i).getProduct();
-			if (product.getCodeId().equalsIgnoreCase(wordKey) || product.getName().equalsIgnoreCase(wordKey)) {
-				exist = true;
-			}
-		}
-		return exist;
-	};
-
-	/**
 	 * This method is to add the purchasing invoices made and in force
 	 * @return Bill ArrayList
 	 */
 	public ArrayList<Bill> getBills() {
 		removeBillWihtProductDelete();
 		return bills;
+	}
+	/**
+	 * This method adds the new user's bill
+	 * @param bill
+	 */
+	public void addBill( Bill bill){
+		bills.add(bill);
 	}
 
 	/**
@@ -76,24 +64,57 @@ public abstract class User {
 	protected void removeBillWihtProductDelete() {
 		boolean isFound=false;
 		for (int i = 0; i < bills.size()&&!isFound; i++) {
-			if (bills.get(i).getProduct() == null) {
+			if (bills.get(i).getProducts() == null) {
 				bills.remove(bills.get(i));
 				isFound=true;
 			}
 		}
+	}
+	/**
+	 * This user's method is responsible for eliminating the subscription of a magazine that has in your library
+	 * @param magazine El objeto de la revista
+	 * @return 
+	 */
+	public String eliminateMagazineSuscription(Bibliographic magazine){
+		String msg="";
+		boolean isFound=false;
+		for (int i = 0; i < bills.size()&&!isFound; i++) {
+			ArrayList<Bibliographic> product=bills.get(i).getProducts();
+			for (int j = 0; j < bills.get(i).getProducts().size()&&!isFound; j++) {
+				if(product.get(i).getName().equals(magazine.getName())){
+					msg=bills.get(i).eleminateMagazine(magazine);
+				}
+			}
+		}
+		return msg;
+	}
+
+	/**
+	 * This method verifies if there is already the bibliographic product in the
+	 * user library
+	 * 
+	 * @param wordKey Bibliographic product name or id
+	 * @return Prduct!=null->Exits, product==null-> no exist
+	 */
+	public Bibliographic alreadyHasProduct(String wordKey){
+		Bibliographic product=null;
+		boolean isFound=false;
+		for (int i = 0; i < bills.size() && !isFound; i++) {
+			if(bills.get(i).alreadyHasProduct(wordKey)!=null){
+				product=bills.get(i).alreadyHasProduct(wordKey);
+				isFound=true;
+			}	
+		}
+		return product;
 	}
 
 	public String romoveMagazineSubscrition(String wordKey) {
 		String msg = "";
 		boolean isFound=false;
-		for (int i = 0; i < bills.size()&&!isFound; i++) {
-			if (bills.get(i).getProduct().getCodeId().equalsIgnoreCase(wordKey)
-				|| bills.get(i).getProduct().getName().equalsIgnoreCase(wordKey)) {
-				bills.remove(bills.get(i));
-				isFound=true;
-			}
-		}
+		
 		return msg;
 	}
+
+	
 
 }
