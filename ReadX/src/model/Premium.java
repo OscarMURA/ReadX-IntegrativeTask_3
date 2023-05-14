@@ -2,6 +2,10 @@ package model;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * The Premium class extends the User class and has a constructor method that takes in the user's name,
+ * id, and income date.
+ */
 
 public class Premium extends User {
 

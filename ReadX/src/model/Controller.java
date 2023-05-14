@@ -3,7 +3,9 @@ package model;
 import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.Random;
-
+/**
+ * It is the controller from the border and the program, and who performs all the functions in the system
+ */
 public class Controller {
 
 	/**
@@ -88,7 +90,6 @@ public class Controller {
 	public String registerBibliographicProduct(int option, String name, int amountPag,
 			Calendar datePublication, String url, double value, int emission, int type, String review) {
 		msg = "The " + name + " product was registered sucessfully";
-
 		String codeId = generationAlfaAndHexaDecimal(option);
 		Bibliographic bibliographic = null;
 		switch (option) {
@@ -148,7 +149,6 @@ public class Controller {
 
 	public TypeBook assignTypeBook(int type) {
 		TypeBook typeBook = null;
-
 		switch (type) {
 			case 1 -> typeBook = TypeBook.SCIENCE_FICTION;
 			case 2 -> typeBook = TypeBook.FANTASY;
@@ -158,7 +158,7 @@ public class Controller {
 	}
 
 	/**
-	 * This control method is for search the bibliographicProduct by its name
+	 * This control method is for search the bibliographicProduct by its name or id
 	 * 
 	 * @param wordKey bibliographicProduct name or identification id
 	 * @return bibliographicProduct, if it exist
@@ -175,11 +175,9 @@ public class Controller {
 		}
 		return product;
 	}
-
 	/**
 	 * This control method is for generate a unique code Hexadecimal or alphanumeric
 	 * to bibliographic product
-	 * 
 	 * @param option Type product--1.Book (codeHexa)--2.Magazine(codeAlphanumeric)
 	 * @return the code identification of the product
 	 */
@@ -207,7 +205,6 @@ public class Controller {
 	/**
 	 * This control method is for decide the type intance the of bibliographic
 	 * product
-	 * 
 	 * @param wordKey bibliographicProduct name or identification id
 	 * @return 1.Book intance or 2.Magazine Intance
 	 */
@@ -243,7 +240,6 @@ public class Controller {
 		msg = "";
 		Bibliographic product = null;
 		product = searchBibliographic(wordKey);
-
 		if (!(name.equals(""))) {
 			product.setName(name);
 			msg += "\n Name \2";
@@ -290,54 +286,66 @@ public class Controller {
 	}
 
 	/**
-	 * This cotrol method delete the me
+	 * This control method eliminates the product in the main library, but not the users who already bought it
 	 * 
 	 * @param wordKey
 	 */
 	public String deleteProduct(String wordKey) {
 		Bibliographic product = searchBibliographic(wordKey);
+		Bibliographic copyProduct= null;
+		ArrayList<Bill> bills=product.getBills();
+		if(product instanceof Book){
+			copyProduct=new Book(product);
+		}else if(product instanceof Magazine){
+			copyProduct=new Magazine(product);
+		}
+		// This loop is for users who had already bought the product, 
+		//do not lose them alone that it will no longer be available to buy	
+		for (int i = 0; i < bills.size(); i++) {
+			bills.get(i).setProduct(product, copyProduct);
+		}
 		bibliographics.remove(product);
 		return "The " + wordKey + " was delete";
 	}
 
+	
 	/**
-	 * This Control Method performs a start test to create 10 regular users and
-	 * premium, also for books and magazines
+	 * The function initializes and populates various objects such as users, bibliographic items, and
+	 * bills, and returns a formatted string displaying the information.
 	 * 
-	 * @return The information of the object create
+	 * @return The method `testInit()` returns a `String` containing a formatted table with information
+	 * about users and bibliographic products, as well as a message indicating that all premium users have
+	 * bought two products with suffixes less than 30 and a note at the end.
 	 */
 	public String testInit() {
-		msg = "";
 		int j = 0;
 		int amountPag = 0, type = 0, emission = 0;
-		String product = "", name = "", url = "", review = "NN", id = "";
+		String product = "",  url = "", id = "";
 		double productValue = 0;
 		Calendar date = Calendar.getInstance();
 		Bibliographic bibliographic = null;
 		User user = null;
+		Bill bill=null;
+		ArrayList<Bibliographic> products=new ArrayList<Bibliographic>();
 
-		for (j = 0; j < 10; j++) {
-			name = "Regular " + (j);
-			id = String.valueOf(random.nextInt((int) 1e6));
-			user = new Regular(name, id, date);
+		msg ="\n"+String.format("\033[43m|%-4s| %-12s|%-10s | %-11s| %-10s| %-7s| %-5s| %-11s |%-6s|\033[0m\n", "Number", "Regular ","> Id ", "Premium ","> Id", "Book","> Id", "Magazine","> Id");
+		msg += String.format("\033[43m|%-6s|\033[0m %-12s| %-10s| %-11s| %-10s| %-7s| %-5s| %-11s |%-6s|\n", "", "", "", "", "","","","","","");
+		for (j = 1; j <= 35; j++) {
+			user = new Regular("Regular "+j, String.valueOf(random.nextInt((int) 1e6)), date);
 			users.add(user);
-			msg += "\4User: " + name + "\tid: " + id + "\n";
+			msg+=String.format("\033[43m|%-6s|\033[0m %-12s| %-10s|", j," "+user.getName()," "+user.getID());
 
-			name = "Premium " + j;
-			id = String.valueOf(random.nextInt((int) 1e6));
-			user = new Premium(name, id, date);
+			user = new Premium("Premium "+j, String.valueOf(random.nextInt((int) 1e6)), date);
 			users.add(user);
-			msg += "\4User: " + name + "\tid: " + id + "\n";
+			msg+=String.format("%-12s| %-10s|"," "+user.getName()," "+user.getID());
 
 			for (int i = 1; i <= 2; i++) {
 				product = (i == 1) ? "Book" : "Magazine";
-				name = product + " " + j;
 				amountPag = random.nextInt(1000) + 1;
 				type = random.nextInt(3) + 1;
 				id = generationAlfaAndHexaDecimal(i);
-				url = generationAlfaAndHexaDecimal(i);
-				url = url + ".PNG";
-				productValue = 10000 + random.nextInt(100000);
+				url = generationAlfaAndHexaDecimal(i)+ ".PNG";
+				productValue = 10000 + random.nextInt((int) 1e5);
 				// Generates dates since 1900
 				int day = random.nextInt(31) + 1;
 				int month = random.nextInt(12) + 1;
@@ -345,19 +353,33 @@ public class Controller {
 				date.set(year, month, day);
 				if (i == 1) {
 					TypeBook typeBook = assignTypeBook(type);
-					bibliographic = new Book(id, name, amountPag, date, url, productValue, typeBook, review);
+					bibliographic = new Book(id, product+" "+j, amountPag, date, url, productValue, typeBook, "NN");
+					msg+=String.format("%-8s| %-5s|"," "+bibliographic.getName()," "+bibliographic.getCodeId());
+
 				} else {
 					emission = random.nextInt(4) + 1;
 					Emission typeEmission = assignTypeEmission(emission);
 					TypeMagazine typeMagazine = assignTypeMagazine(type);
-					bibliographic = new Magazine(id, name, amountPag, date, url, productValue, typeEmission,
+					bibliographic = new Magazine(id, product+" "+j, amountPag, date, url, productValue, typeEmission,
 							typeMagazine);
+					msg+=String.format("%-12s | %-5s|"," "+bibliographic.getName()," "+bibliographic.getCodeId());
+
 				}
-				msg += "\4" + name + "->  code: " + id + "\n";
 				bibliographics.add(bibliographic);
+				if(j<31){//Save the first 30 products for purchase
+					products.add(bibliographic);
+				}
 			}
-			msg += "\n\n";
+			msg+="\n";
 		}
+		bill=new Bill((int) 1e10, date, products);
+		for (int i = 1; i < users.size(); i++) {
+			if(users.get(i) instanceof Premium){
+				users.get(i).addBill(bill);
+			}
+		}
+		msg+="\nPD: All premium users has bought to products with suffixes less than 30\n\n";
+		
 		return msg;
 	}
 
@@ -369,7 +391,6 @@ public class Controller {
 	public User getCurrentUser() {
 		return currentUser;
 	}
-
 	/**
 	 * This control method verifies the type of book that is the book, and only the
 	 * purchase of products will be recorded if you are an user, or if you are
@@ -381,44 +402,48 @@ public class Controller {
 	public String BuyProduct(ArrayList<String> wordKeys, double totalValue) {
 		int book=0, magazine=0;
 		Calendar buyDate = Calendar.getInstance();
-		msg = "";
 		String noSave="";
 		int pos = 0;
 		ArrayList<Bibliographic> products = new ArrayList<Bibliographic>();
 		Bibliographic product = null;
 		Bill bill = null;
+		msg="";
+		
 		if(currentUser instanceof Regular){//
 			book=((Regular) currentUser).counterProduct(1);
 			magazine=((Regular) currentUser).counterProduct(2);
 		}
 		for (int i = 0; i < wordKeys.size(); i++) {
+			product = searchBibliographic(wordKeys.get(i));
 			if(currentUser instanceof Regular){
-				if(intanceOfBibliographic(wordKeys.get(i))==1){
-					book+=1;
+				if(product instanceof Book){
+					book++;
 				}else{
-					magazine+=1;
+					magazine++;
 				}
 			}
-			product = searchBibliographic(wordKeys.get(i));
 			if( (currentUser instanceof Premium ) || (product instanceof Book &&  book<=5) || (product instanceof Magazine &&  book<=2)){
 				products.add(product);
 			}
 			else{
-				noSave+="\nThis product "+product.getName()+". It is not added by overcoming the purchase limit of this type.";
+				noSave+="\nThis product: "+product.getName()+". It is not added by overcoming the purchase limit of this type.";
 			}
 		}
-		products.remove(null);
-		bill = new Bill(totalValue, buyDate, products);
-		currentUser.addBill(bill);
-		msg = bill.toString();
+		if(wordKeys.size()==0){
+			msg = "You don't buy products";
+		}else{
+			products.remove(null);
+			bill = new Bill(totalValue, buyDate, products);
+			currentUser.addBill(bill);
+			msg = bill.toString();
+		}
+		
 		return msg+noSave;
 	}
-
 	/**
 	 * This method verifies if the user can buy 1.Boor or Magazine if it is a
 	 * regular user, if it is Premium, it passes the test, it means that it
 	 * can*
-	 * 
 	 * @param option 1.Book or 2.Magazine
 	 * @return true: The user can Buy Prodcut bibliographic
 	 */
@@ -434,27 +459,38 @@ public class Controller {
 		}
 		return canBuy;
 	}
-
-	
 	/**
-	 * Este metodo se encarga para eliminar la susc
-	 * 
-	 * @param wordKey
-	 * @return
+	 * This method is responsible for eliminating the subscription of a magazine 
+	 * @param wordKey Name or ID of bibliographic products
+	 * @return Message that subscription stood out
 	 */
 	public String eliminateMagazineSubscrition(String wordKey) {
 		boolean isFound = false;
 		Bibliographic product=currentUser.alreadyHasProduct(wordKey);
 		return currentUser.eliminateMagazineSuscription(product);
 	}
-
-	public String read(int option, String wordKey) {
+	
+	/**
+	 * The function reads a section of a product and returns a message with options for the user.
+	 * 
+	 * @param option a character representing the user's choice of action while reading a product (either
+	 * moving to the next page, going back to the previous page, or returning to the user menu)
+	 * @param wordKey The wordKey parameter is a String that represents the unique identifier of a
+	 * bibliographic product. It is used to retrieve the corresponding product and bill from the current
+	 * user's account.
+	 * @return The method is returning a String message that includes information about the current
+	 * reading section, the name of the product being read, the current page being read, and options for
+	 * the user to navigate to the next page, go back to the previous page, or return to the user menu.
+	 */
+	public String read(char option, String wordKey) {
 		Bibliographic product = currentUser.alreadyHasProduct(wordKey);
-		msg = "Seccion de lectura en proceso: ";
-		msg += "Leyendo:  " + product.getName();
-		if (option == 1) {
-
-		}
+		Bill bill=currentUser.getBill(wordKey);
+		int pos=bill.increasePages(option, product);
+		msg = "\nReading section in process: ";
+		msg +="\nReading: " + product.getName();
+		msg+="\nReading page "+pos+" of "+product.getAmountPag()+"\n";
+		msg+="\nS.Next Page\nA.Back Page\nB.Back Menu User \n";	
+		
 		return msg;
 
 	}

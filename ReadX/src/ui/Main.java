@@ -5,14 +5,13 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.Random;
-import model.Bibliographic;
-import ui.Tools;
 
+/**
+ * The above code defines a Java class named "Main".
+ */
 public class Main {
-
 	private static Controller controller;
 	private static Scanner reader;
 	private static SimpleDateFormat format;
@@ -35,16 +34,18 @@ public class Main {
 		int option = -1;
 		println(init);
 		do {
-			println("Welcome your are Manager(1) or Client(2). 3.Exit");
+			tools.lines();
+			println("Welcome your are> 1.Manager, 2.Client or 0.Exit");
 			do {
+				print("\n\4Correctly type option: ");
 				option = tools.validateInt();
-			} while (option != 1 && option != 2);
+			} while (option != 1 && option != 2 && option!=0);
 
 			if (option == 1) {
 				do {
-					main.menu(1);
+					menu(1);
 					do {
-						print("Correctly Type option: ");
+						print("\n\4Correctly Type option: ");
 						option = tools.validateInt();
 					} while (option < 0 && option > 4);
 					main.executionManager(option);
@@ -57,7 +58,7 @@ public class Main {
 				do {
 					menu(2);
 					do {
-						print("Correctly Type option: ");
+						print("\n\4Correctly Type option: ");
 						option = tools.validateInt();
 					} while (option < 1 && option > 2);
 					boolean allow = main.execution(option);
@@ -66,13 +67,14 @@ public class Main {
 						do {
 							menu(3);
 							do {
-								print("Correctly Type option: ");
+								print("\n\4Correctly Type option: ");
 								option = tools.validateInt();
 							} while (option < 1 && option > 2);
 							main.executionUser(option);
+
 						} while (option != 0);
 					} else if (option != 0) {
-						println("No exits this user");
+						println("¡No exits this user!");
 					}
 				} while (option != 0);
 				option = -1;
@@ -86,12 +88,16 @@ public class Main {
 	 * @param option 1. Manager menu, 2. User Preringress Menu or 3. User Menu
 	 */
 	public static void menu(int option) {
+		tools.lines();
 		if (option == 1) {
-			println("\4 1. Register Bibliographic products\n\4 2.Modify Bibliograpic product\n\4 3.Delete Bibliographic Products");
-			println("\4 4.Show the test Init\n\4 0.Back");
+			tools.title("Manager Section");
+			println("\t\4 1. Register Bibliographic products\n\t\4 2.Modify Bibliograpic product\n\t\4 3.Delete Bibliographic Products");
+			println("\t\4 4.Show the test Init\n\t\4 0.Back");
 		} else if (option == 2) {
-			println("\4 1. Register User\n\4 2.Login User\n\4 0.Back");
+			tools.title("User section");
+			println("\n\4 1. Register User\n\4 2.Login User\n\4 0.Back");
 		} else if (option == 3) {
+			tools.title("Welcome " + controller.getCurrentUser().getName());
 			println("\4 1. Buy Bibliographic Products (Book or Magazine)\n\4 2.Eliminate Magazine subscription\n\4 3.Read a Bibliographic Products\n\4 0.Back ");
 		}
 	}
@@ -110,10 +116,8 @@ public class Main {
 		}
 		return allow;
 	}
-
 	/**
 	 * METHOD FOR MANAGE OPTIONS
-	 * 
 	 * @param option 1.Register 2.Modify 3.Delete 4.Show TestInit
 	 */
 	public void executionManager(int option) {
@@ -128,7 +132,6 @@ public class Main {
 			}
 		}
 	}
-
 	/**
 	 * Control method for user options
 	 * 
@@ -138,9 +141,9 @@ public class Main {
 		switch (option) {
 			case 1 -> BuyBibliographicProduct();
 			case 2 -> eliminateMagazineSubscription();
+			case 3 -> read();
 		}
 	}
-
 	/**
 	 * println Method
 	 * 
@@ -149,7 +152,6 @@ public class Main {
 	public static void println(Object println) {
 		System.out.println(println);
 	}
-
 	/**
 	 * print Method
 	 * 
@@ -158,9 +160,12 @@ public class Main {
 	public static void print(Object print) {
 		System.out.print(print);
 	}
-
+	
 	/**
-	 * Decoration method to separate functionalities
+	 * This function registers a user by prompting for their name, unique ID, and user type (regular or
+	 * premium) and then calling the registerUser method in the controller class.
+	 * 
+	 * @return The method is returning a boolean value of true.
 	 */
 	public boolean registerUser() {
 		String name = "", id = "", msg = "";
@@ -198,8 +203,7 @@ public class Main {
 		String product = "", productName = "", url = "", msg = "", review = "";
 		double productValue = 0;
 		Calendar datePublication = null;
-		Bibliographic bibliographic = null;
-
+		
 		tools.lines();
 		tools.title("Register blibliographic products");
 		println("Choose the type Product:\n\t1.Book\n\t2.Magazine\n");
@@ -219,7 +223,6 @@ public class Main {
 		datePublication = assingDate();
 		productValue = assignProductValue(product);
 		type = assignProductType(product, option);
-
 		if (option == 1) {
 			print("Type book review: ");
 			review = tools.read(reader);
@@ -232,8 +235,7 @@ public class Main {
 	}
 
 	/**
-	 * This view method assign the name of the product
-	 * 
+	 * This view method assign the name of the product 
 	 * @param product Type product ("Book" or "Magazine")
 	 * @return product name
 	 */
@@ -253,7 +255,6 @@ public class Main {
 
 	/**
 	 * This view method assign the amount pag of the product
-	 * 
 	 * @param product Type product ("Book" or "Magazine")
 	 * @return product Amount page
 	 */
@@ -265,10 +266,8 @@ public class Main {
 		} while (amountPag <= 0);
 		return amountPag;
 	}
-
 	/**
 	 * This view method assign the value of the product
-	 * 
 	 * @param product Type product ("Book" or "Magazine")
 	 * @return product value
 	 */
@@ -280,10 +279,8 @@ public class Main {
 		} while (productValue < 0 || productValue == Integer.MAX_VALUE);
 		return productValue;
 	}
-
 	/**
 	 * This view method assign the each product type
-	 * 
 	 * @param product "Book" or "Magazine"
 	 * @param option  1.Book or 2.Magazine
 	 * @return product type such as option number
@@ -305,10 +302,8 @@ public class Main {
 		} while (type <= 0 || type >= 4);
 		return type;
 	}
-
 	/**
 	 * This view method assign the emission of the Magazine
-	 * 
 	 * @param product Type product ("Book" or "Magazine")
 	 * @return emission Type of the Magazine
 	 */
@@ -322,7 +317,6 @@ public class Main {
 		} while (emission <= 0 || emission >= 5);
 		return emission;
 	}
-
 	public String assignUrl() {
 		String url = "";
 		Random random = new Random();
@@ -333,19 +327,16 @@ public class Main {
 		println("Your url: " + url);
 		return url;
 	}
-
 	/**
 	 * Prompts the user to enter a date in the format "dd/MM/yyyy",
 	 * and tools.validates the input to ensure that it is a valid date. Returns
-	 * a Calendar object representing the date entered by the user.
-	 * 
+	 * a Calendar object representing the date entered by the user. 
 	 * @return A Calendar object representing the date entered by the user.
 	 */
 	public Calendar assingDate() {
 		Calendar dateCal = Calendar.getInstance();
 		Calendar now = Calendar.getInstance();
 		boolean follow;
-		boolean isBefore = false;
 		println("\n\4Type date publication: dd-MM-yyyy ->Exa: 22-02-2023");
 		do {
 			follow = false;
@@ -358,15 +349,12 @@ public class Main {
 			} catch (ParseException e) {
 				println("\n\t¡Please enter date correctly!");
 			}
-
-			isBefore = dateCal.before(now);
-			if (!isBefore && follow) {
+			if (!(dateCal.before(now)) && follow) {
 				println("\tYou must enter the date, at the moment you cannot place products without premiere");
 			}
 		} while (!follow);
 		return dateCal;
 	}
-
 	/**
 	 * This view method is for Modify bibliographic products
 	 */
@@ -420,7 +408,6 @@ public class Main {
 		}
 		println("\n\n" + msg);
 	}
-
 	/**
 	 * This view method is for delete bibliographic products
 	 */
@@ -437,29 +424,26 @@ public class Main {
 		}
 		println(msg);
 	}
-
 	/**
-	 * This method focuses on looking for the user, to start in a registered account
-	 * 
+	 * This method focuses on looking for the user, to start in a registered account 
 	 * @return True: the user exists, or false: the user does not exist
 	 */
 	public static boolean searchUser() {
 		String name = "", id = "";
 		boolean isFound = false;
+		println("");
+		tools.title("Search User");
 		print("Type your id: ");
 		id = tools.read(reader);
 		if (controller.searchUser(id) != null) {
-			println("Welcome " + controller.searchUser(id).getName());
 			isFound = true;
 		} else {
 			println("There are not id");
 		}
 		return isFound;
 	}
-
 	/**
-	 * This view method focuses to search for a product and register it in the
-	 * systems
+	 * This method of view focuses on receiving and entering the information to proceed to the purchase of bibliographic products from a specific user
 	 */
 	public void BuyBibliographicProduct() {
 		ArrayList<String> wordKeys = new ArrayList<String>();
@@ -467,22 +451,22 @@ public class Main {
 		int intance = 0;
 		double value = 0, realValue = 0, totalValue = 0;
 		
-
 		tools.lines();
 		tools.title("Buy Product Bibliographic");
 		do {
-
-			print("Correctly typoe code or name (Save=\"0\"): ");
+			print("Correctly typoe code or name (Save buy=\"0\"): ");
 			wordKey = tools.read(reader);
+			//Conditional that verifies that this product exists and that not save buy
 			if (controller.searchBibliographic(wordKey) != null && !(wordKey.equals("0"))) {
-				if (controller.getCurrentUser().alreadyHasProduct(wordKey) != null) {
-					println("You already have this book in your library");
+				// conditional not to buy a product twice
+				if (controller.getCurrentUser().alreadyHasProduct(wordKey) != null || wordKeys.contains(wordKey.toUpperCase())) {
+					println("You already have this book");
 				} else {
-
 					intance = controller.intanceOfBibliographic(wordKey);
 					type = (intance == 1) ? "Book value" : "Magazine subcription";
+					// conditional that verifies if you can buy that type of product
 					if (controller.CheckingCheck(intance)) {
-
+						println(controller.searchBibliographic(wordKey).getData());
 						realValue = controller.searchBibliographic(wordKey).getValue();
 						println(type + " is: " + realValue + "\n");
 						do {
@@ -493,20 +477,19 @@ public class Main {
 							}
 						} while (!(value >= realValue));
 						totalValue += value;
-						wordKeys.add(wordKey);// Add the names of the products to names
-
+						wordKeys.add(wordKey.toUpperCase());// Add the names of the products to names
 					} else {
 						println("You can't buy this product: "+wordKey+" "+type+" The library of this type is filled");
 					}
 				}
+				
 			} else if (!(wordKey.equals("0"))) {
 				println("No exist the product: " + wordKey);
 			}
-
 		} while (!(wordKey.equals("0")));
-
+		msg=controller.BuyProduct(wordKeys, totalValue);
+		println(msg);
 	}
-
 	/**
 	 * The view method is to eliminate subscriptions with user magazines
 	 */
@@ -527,28 +510,31 @@ public class Main {
 		}
 	}
 
+	/**
+	 *This method is responsible for simulating the sensation of reading 
+	 any bibliographic product that the user possesses
+	 */
 	public void read() {
 		String wordKey = "";
-		int option = 0;
+		char option = ' ';
 		tools.lines();
 		tools.title("Read Bibliographic Product");
 		println("Product: ");
-		print("\nType the product: ");
+		print(controller.getCurrentUser().showProductUser());
+		print("\nType the product (Back=B): ");
 		wordKey = tools.read(reader);
 		if (controller.getCurrentUser().alreadyHasProduct(wordKey) != null) {
 			do {
-				print("1.Next Page\n2.Back Page\n3.Back Menu User ");
+				String msg=controller.read(option, wordKey);
+				println(msg);
 				do {
 					print("Correctly type: ");
-					option = tools.validateInt();
-				} while (option < 1 && option > 3);
+					option = reader.next().toUpperCase().charAt(0);
+				} while (option!='A' && option != 'S' && option !='B');
 
-			} while (option != 3);
-
-		} else {
-			println("Product not exits");
+			} while (option != 'B');
+		} else if(wordKey.toUpperCase().charAt(0)!='B') {
+			println("Product not exits in your library :C");
 		}
-
 	}
-
 }

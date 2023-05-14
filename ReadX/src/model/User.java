@@ -3,6 +3,9 @@ package model;
 import java.util.Calendar;
 import java.util.ArrayList;
 
+/**
+ * The above class is an abstract class called "User".
+ */
 public abstract class User {
 
 	private String name;
@@ -56,7 +59,6 @@ public abstract class User {
 	public void addBill( Bill bill){
 		bills.add(bill);
 	}
-
 	/**
 	 * This method is responsible for eliminating products that are no
 	 * longer in force in the market
@@ -73,22 +75,15 @@ public abstract class User {
 	/**
 	 * This user's method is responsible for eliminating the subscription of a magazine that has in your library
 	 * @param magazine El objeto de la revista
-	 * @return 
+	 * @return Elimination magazine subscription message
 	 */
 	public String eliminateMagazineSuscription(Bibliographic magazine){
 		String msg="";
 		boolean isFound=false;
-		for (int i = 0; i < bills.size()&&!isFound; i++) {
-			ArrayList<Bibliographic> product=bills.get(i).getProducts();
-			for (int j = 0; j < bills.get(i).getProducts().size()&&!isFound; j++) {
-				if(product.get(i).getName().equals(magazine.getName())){
-					msg=bills.get(i).eleminateMagazine(magazine);
-				}
-			}
-		}
+		Bill bill=getBill(magazine.getCodeId());
+		bill.eleminateMagazine(magazine);
 		return msg;
 	}
-
 	/**
 	 * This method verifies if there is already the bibliographic product in the
 	 * user library
@@ -98,23 +93,61 @@ public abstract class User {
 	 */
 	public Bibliographic alreadyHasProduct(String wordKey){
 		Bibliographic product=null;
-		boolean isFound=false;
-		for (int i = 0; i < bills.size() && !isFound; i++) {
-			if(bills.get(i).alreadyHasProduct(wordKey)!=null){
-				product=bills.get(i).alreadyHasProduct(wordKey);
-				isFound=true;
-			}	
+		Bill bill=getBill(wordKey);
+		if(bill!=null){
+			product= bill.alreadyHasProduct(wordKey);
 		}
 		return product;
 	}
-
-	public String romoveMagazineSubscrition(String wordKey) {
-		String msg = "";
+	/**
+	 * This method focuses on searching and returning the Bill object where the bibliographic product has the user
+	 * @param wordKey Bibliographic product name or id
+	 * @return Bill!=null->Exits, Bill==null-> no exist
+	 */
+	public Bill getBill(String wordKey){
+		Bill bill=null;
 		boolean isFound=false;
-		
-		return msg;
+		for (int i = 0; i < bills.size() && !isFound; i++) {
+			if( bills.get(i).alreadyHasProduct(wordKey) != null ){
+				bill=bills.get(i);
+				isFound=true;
+			}	
+		}
+		return bill;
 	}
 
+	/**
+	 * This function generates a formatted string displaying the products (magazines and books) in the
+	 * bills list.
+	 * 
+	 * @return The method `showProductUser` returns a String that represents a table of the products
+	 * (Magazines and Books) that have been purchased in the bills list. The table has a header with the
+	 * titles "Magazine" and "Book", and each product is represented by its codeId. The products are
+	 * arranged in sections of 5, and the table is formatted with different colors and styles using escape
+	 */
+	public String showProductUser(){
+		String msg="\033[30m\n";
+		int section=0;
+		msg+=String.format("|\033[48;5;225m %-10s|\033[0m\033[43m %-8s|\033[0m\n\n|"," Magazine "," Book ");
+		for (int i = 0; i < bills.size(); i++) {
+			for (int j = 0; j < bills.get(i).getProducts().size(); j++) {
+				Bibliographic product= bills.get(i).getProducts().get(j);
+				if(product instanceof Magazine){
+					msg+=String.format("\033[48;5;225m\033[30m %-6s|\033[0m", product.getCodeId());
+				}else{
+					msg+=String.format("\033[43m %-6s|\033[0m", product.getCodeId());
+				}
+				
+				section++;
+				if(section==5){
+					section=0;
+					msg+="\n|";
+				}
+			}
+		}
+		msg+="\n";
+		return msg;
+	}
 	
 
 }

@@ -7,6 +7,15 @@ public class Tools {
     private static Scanner reader;
 
 
+	/**
+	 * This is a Java class called "Tools" that contains several methods for input validation and user
+	 * interface decoration. The constructor initializes a Scanner object to read input from the console.
+	 * The "read" method is used to read a line of text input and verify that it does not contain any
+	 *  issues. The "lines" method prints a decorative line to the console. The "title" method prints a
+	 *  decorative title to the console. The "validateDouble" and "validateInt" methods are used to validate
+	 *  numeric input from the user, ensuring that it is a valid number and within any necessary
+	 * restrictions.
+	 */
     public Tools(){
         reader = new Scanner(System.in);
     }
@@ -31,8 +40,7 @@ public class Tools {
 	
 	public void lines() {
 		System.out.println("\033[47;35m"
-				+ "\n\3\3------------\4\4------------\3\3------------\4\4------------\3\3------------\4\4------------\3\3"
-				+ "\033[0m \n");
+				+ "\n\3\3------------\4\4------------\3\3------------\4\4------------\3\3------------\4\4------------\3\3\033[0m\n");
 	}
 	/**
 	 * Decoration method for title

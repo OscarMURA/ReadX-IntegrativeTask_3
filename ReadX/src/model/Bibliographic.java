@@ -1,16 +1,22 @@
 package model;
 import java.util.ArrayList;
 import java.util.Calendar;
-public abstract class Bibliographic {
+/**
+ * The Bibliographic class is an abstract class that contains attributes and methods related to
+ * bibliographic products.
+ */
+public abstract class Bibliographic  {
 
-	private String name;
-	private int amountPag;
-	private Calendar datePublication;
-	private String url;
-	private double value;
+	protected String name;
+	protected int amountPag;
+	protected Calendar datePublication;
+	protected String url;
+	protected double value;
+	/**
+	 * It is an arrangement of invoices linked to the object purchasedurchased
+	 */
 	private ArrayList<Bill> bills;
-
-	private String codeId;
+	protected String codeId;
 
 	/**
 	 * this buiilder method of the Bibliographic class
@@ -30,6 +36,8 @@ public abstract class Bibliographic {
 		this.value=value;
 		bills=new ArrayList<Bill>();
 	}
+
+
 	/**
 	 * This control method 
 	 * @return Bibliographic name
@@ -37,12 +45,25 @@ public abstract class Bibliographic {
 	public String getName() {
 		return name;
 	}
+	public int getAmountPag() {
+		return amountPag;
+	}
 	/**
 	 * This method save the new name
 	 * @param name String: Bibliographic product name
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	/**
+	 * This function returns the date of publication as a Calendar object.
+	 * @return The method `getDatePublication()` is returning a `Calendar` object.
+	 */
+	public Calendar getDatePublication() {
+		return datePublication;
+	}
+	public String getUrl() {
+		return url;
 	}
 	/**
 	 * This method save the new AmountPage
@@ -101,5 +122,14 @@ public abstract class Bibliographic {
 		this.bills.add(bill);
 	}
 
+	/**
+	 * This method has the function of obtaining the information of the bibliographic product
+	 * @return A message with your basic information
+	 */
+	public abstract String getData();
+
+	public ArrayList<Bill> getBils(){
+		return bills;
+	}
 
 }

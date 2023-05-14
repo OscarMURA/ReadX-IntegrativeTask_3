@@ -3,10 +3,12 @@ package model;
 import java.util.Calendar;
 import java.util.ArrayList;
 
+/**
+ * The Regular class extends the User class and has a method to count the number of products bought by
+ * the user.
+ */
 public class Regular extends User {
 
-	// private ArrayList<Bill> billMagazine;
-	// private ArrayList<Bill> billBook;
 
 	/**
 	 * this constructor method of the regular class
@@ -18,7 +20,7 @@ public class Regular extends User {
 	public Regular(String name, String id, Calendar dateLinkage) {
 		super(name, id, dateLinkage);
 	}
-
+	
 
 	/**
 	 * This method is responsible for counting the products bought from the regular
