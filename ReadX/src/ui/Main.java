@@ -246,7 +246,7 @@ public class Main {
 			print("\n\4Exclusive! Type " + product + " name: ");
 			productName = tools.read(reader);
 
-			if ((controller.searchBibliographic(productName) != null)) {
+			if (((controller.searchBibliographic(productName) != null))) {
 				repeat = true;
 			}
 		} while (repeat);
@@ -351,6 +351,7 @@ public class Main {
 			}
 			if (!(dateCal.before(now)) && follow) {
 				println("\tYou must enter the date, at the moment you cannot place products without premiere");
+				follow=false;
 			}
 		} while (!follow);
 		return dateCal;

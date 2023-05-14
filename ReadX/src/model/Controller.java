@@ -49,6 +49,7 @@ public class Controller {
 			case 2 -> user = new Premium(name, id, dateLinkage);
 		}
 		users.add(user);
+		currentUser=users.get(users.size()-1);
 		return msg;
 	}
 
