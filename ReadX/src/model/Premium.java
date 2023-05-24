@@ -9,7 +9,6 @@ import java.util.Calendar;
 
 public class Premium extends User {
 
-
 	/**
 	 * this constructor method of the premium class
 	 * @param name User name

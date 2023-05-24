@@ -1,7 +1,5 @@
 package model;
 
-
-
 public enum Emission{
     MONTHLY,
     QUARTERLY,

@@ -21,6 +21,7 @@ public class Bill {
 	// type `ArrayList<Bibliographic>`. This variable is used to store a list of bibliographic products
 	// that were bought by the user.
 	private ArrayList<Integer> ultimePag;
+	private ArrayList<Integer> initPag;
 	private ArrayList<Bibliographic> products;
 
 	/**
@@ -36,6 +37,7 @@ public class Bill {
 		this.products = products;
 		readPage=new ArrayList<Integer>(products.size());
 		ultimePag=new ArrayList<Integer>(products.size());
+		initPag=new ArrayList<Integer>(products.size());
 		initPages();
 	}
 	/**
@@ -63,6 +65,7 @@ public class Bill {
 		for (int i = 0; i < products.size(); i++) {
 			readPage.add(i, 0);
 			ultimePag.add(i, 0);
+			initPag.add(i, 0);
 		}
 	}
 	/**
@@ -85,19 +88,81 @@ public class Bill {
 		msg += "\nBuy date: "+dateBuy.getTime()+"\n";
 		return msg;
 	}
+
 	/**
-	 * This method eliminates the subscription of a magazine 
-	 * @param magazine
-	 * @return Message that the magazine was eliminated
+	 * This Java function removes a Bibliographic product from a list and also removes its corresponding
+	 * readPage and ultimePag values.
+	 * @param product an object of the class Bibliographic, which represents a bibliographic product (e.g.
+	 * a book, a journal article, etc.) that needs to be eliminated from a list of products.
 	 */
-	public String eleminateMagazine(Bibliographic magazine) {
-		String msg = "Se elimino correctamente la revista " + magazine.getName() + " code: " + magazine.getCodeId();
-		int i = positionProduct(magazine);
-		products.remove(i);
-		readPage.remove(i);
-		ultimePag.remove(i);
+	public String eliminateProduct(Bibliographic product){
+		String msg = "The bibliographic product was correctly eliminated: " + product.getName() + " code: " + product.getCodeId();
+		int position=positionProduct(product);
+		products.remove(position);
+		readPage.remove(position);
+		ultimePag.remove(position);
+		
 		return msg;
 	}
+	
+	/**
+	 * This method returns the bibliographic product that is related to the invoice
+	 * @return bibliographic product
+	 */
+	public ArrayList<Bibliographic> getProducts() {
+		return products;
+	}
+
+	/**
+ 	* The function increases or decreases the page number of a given bibliographic product based on the
+ 	* user's input and returns the updated page number.
+ 	* 
+ 	* @param option A character representing the user's choice of action ('S' for advancing to the next
+ 	* page, 'A' for going back to the previous page, or 'B' for finishing reading the book).
+ 	* @param product A Bibliographic object representing the product  being read.
+	* @return The method is returning an integer value, which is the number of the page that the user is
+ 	* currently reading.
+ 	*/
+	public int increasePages(char option, Bibliographic product) {
+		int i = positionProduct(product);
+		int pag = (int) ultimePag.get(i);//Is to return the number of the page
+		int num=readPage.get(i);
+		if (option == 'S') {
+			if(readPage.get(i)<products.get(i).getAmountPag()){//Check if it is less than the total book pages
+				num++;
+				readPage.set(i, num );
+				if(readPage.get(i)>ultimePag.get(i)){//Check if it is the biggest page
+					ultimePag.set(i, num);//Save the biggest page
+					product.pageRead();
+				}	
+			}	
+		} else if(option == 'A' && (readPage.get(i)>0)){//Para devolver a la pagina anterior
+			num--;
+			readPage.set(i, num );
+		} else if(option == 'B'){
+			ultimePag.set(i,num);//Save the present page that is reading with the last read, to finish reading simple	
+			initPag.set(i, num);
+		}
+		pag=readPage.get(i);
+		return pag;
+	}
+
+	public int getUltimePag(Bibliographic product) {
+		int i=positionProduct(product);
+		return ultimePag.get(i);
+	}
+
+	public int getInitPag(Bibliographic product) {
+		int i=positionProduct(product);
+		return initPag.get(i);
+	}
+
+	public int getReadPage(Bibliographic product) {
+		int i=positionProduct(product);
+		return readPage.get(i);
+	}
+	
+
 	/**
 	 * This Java function returns the position of a bibliographic product in a list
 	 * based on its name.
@@ -120,52 +185,4 @@ public class Bill {
 		}
 		return j;
 	}
-	/**
-	 * This method returns the bibliographic product that is related to the invoice
-	 * @return bibliographic product
-	 */
-	public ArrayList<Bibliographic> getProducts() {
-		return products;
-	}
-
-/**
- * The function increases or decreases the page number of a given bibliographic product based on the
- * user's input and returns the updated page number.
- * 
- * @param option A character representing the user's choice of action ('S' for advancing to the next
- * page, 'A' for going back to the previous page, or 'B' for finishing reading the book).
- * @param product A Bibliographic object representing the product  being read.
- * @return The method is returning an integer value, which is the number of the page that the user is
- * currently reading.
- */
-	public int increasePages(char option, Bibliographic product) {
-		int i = positionProduct(product);
-		int pag = ultimePag.get(i);//Is to return the number of the page
-		if (option == 'S') {
-			if(readPage.get(i)<products.get(i).getAmountPag()){//Check if it is less than the total book pages
-				readPage.add(i, readPage.get(i)+1 );
-				if(readPage.get(i)>ultimePag.get(i)){//Check if it is the biggest page
-					ultimePag.add(i, readPage.get(i));//Save the biggest page
-				}	
-			}	
-		} else if(option == 'A' && (readPage.get(i)>0)){//Para devolver a la pagina anterior
-			readPage.add(i, readPage.get(i)-1);
-		} else if(option == 'B'){
-			ultimePag.add(i, readPage.get(i));//Save the present page that is reading with the last read, to finish reading simple	
-		}
-		pag=readPage.get(i);
-		return pag;
-	}
-
-	/**
-	* This method makes a backup when the disagreement system a product, so the product that the user bought was not deleted from the system	
-	* @param oldproduct The bibliographic product that will be eliminated	
-	* @param copyProduct Copia de seguridad del producto bibliografico
-	*/
-	public void setProduct(Bibliographic oldProduct, Bibliographic copyProduct){
-		int position=positionProduct(oldProduct);
-		products.set(position, copyProduct);
-	}
-	
-
 }

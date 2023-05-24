@@ -4,7 +4,8 @@ import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.Random;
 /**
- * It is the controller from the border and the program, and who performs all the functions in the system
+ * It is the controller from the border and the program, and who performs all
+ * the functions in the system
  */
 public class Controller {
 
@@ -49,7 +50,7 @@ public class Controller {
 			case 2 -> user = new Premium(name, id, dateLinkage);
 		}
 		users.add(user);
-		currentUser=users.get(users.size()-1);
+		currentUser = users.get(users.size() - 1);
 		return msg;
 	}
 
@@ -118,7 +119,8 @@ public class Controller {
 	/**
 	 * This method is for assign the type that is the Magazine
 	 * 
-	 * @param type varaible flag to indicate the type
+	 * @param type varaible flag to indicate the type. 1.Varieties, 2.Desing and
+	 *             3.Scientis
 	 * @return The Magazine type
 	 */
 	public TypeMagazine assignTypeMagazine(int type) {
@@ -148,6 +150,13 @@ public class Controller {
 		return typeEmmision;
 	}
 
+	/**
+	 * This method is for assign the type that is the Book
+	 *
+	 * @param type varaible flag to indicate the type. 1.Ciencie fiction, 2.Fantasy
+	 *             and 3.Historical novel
+	 * @return The Book type
+	 */
 	public TypeBook assignTypeBook(int type) {
 		TypeBook typeBook = null;
 		switch (type) {
@@ -176,9 +185,11 @@ public class Controller {
 		}
 		return product;
 	}
+
 	/**
 	 * This control method is for generate a unique code Hexadecimal or alphanumeric
 	 * to bibliographic product
+	 * 
 	 * @param option Type product--1.Book (codeHexa)--2.Magazine(codeAlphanumeric)
 	 * @return the code identification of the product
 	 */
@@ -206,6 +217,7 @@ public class Controller {
 	/**
 	 * This control method is for decide the type intance the of bibliographic
 	 * product
+	 * 
 	 * @param wordKey bibliographicProduct name or identification id
 	 * @return 1.Book intance or 2.Magazine Intance
 	 */
@@ -287,100 +299,112 @@ public class Controller {
 	}
 
 	/**
-	 * This control method eliminates the product in the main library, but not the users who already bought it
+	 * This control method eliminates the product in the main library, but not the
+	 * users who already bought it
 	 * 
 	 * @param wordKey
 	 */
 	public String deleteProduct(String wordKey) {
 		Bibliographic product = searchBibliographic(wordKey);
-		Bibliographic copyProduct= null;
-		ArrayList<Bill> bills=product.getBills();
-		if(product instanceof Book){
-			copyProduct=new Book(product);
-		}else if(product instanceof Magazine){
-			copyProduct=new Magazine(product);
-		}
-		// This loop is for users who had already bought the product, 
-		//do not lose them alone that it will no longer be available to buy	
+		ArrayList<Bill> bills = product.getBills();
+
+		// This loop is for users who had already bought the product,
+		// do not lose them alone that it will no longer be available to buy
 		for (int i = 0; i < bills.size(); i++) {
-			bills.get(i).setProduct(product, copyProduct);
+			Bill bill = bills.get(i);
+			bill.eliminateProduct(product);
 		}
+
 		bibliographics.remove(product);
 		return "The " + wordKey + " was delete";
 	}
 
-	
 	/**
-	 * The function initializes and populates various objects such as users, bibliographic items, and
+	 * The function initializes and populates various objects such as users,
+	 * bibliographic items, and
 	 * bills, and returns a formatted string displaying the information.
 	 * 
-	 * @return The method `testInit()` returns a `String` containing a formatted table with information
-	 * about users and bibliographic products, as well as a message indicating that all premium users have
-	 * bought two products with suffixes less than 30 and a note at the end.
+	 * @return The method `testInit()` returns a `String` containing a formatted
+	 *         table with information
+	 *         about users and bibliographic products, as well as a message
+	 *         indicating that all premium users have
+	 *         bought two products with suffixes less than 30 and a note at the end.
 	 */
 	public String testInit() {
 		int j = 0;
 		int amountPag = 0, type = 0, emission = 0;
-		String product = "",  url = "", id = "";
+		String product = "", url = "", id = "";
 		double productValue = 0;
 		Calendar date = Calendar.getInstance();
 		Bibliographic bibliographic = null;
 		User user = null;
-		Bill bill=null;
-		ArrayList<Bibliographic> products=new ArrayList<Bibliographic>();
+		Bill bill = null;
+		ArrayList<Bibliographic> products = new ArrayList<Bibliographic>();
 
-		msg ="\n"+String.format("\033[43m|%-4s| %-12s|%-10s | %-11s| %-10s| %-7s| %-5s| %-11s |%-6s|\033[0m\n", "Number", "Regular ","> Id ", "Premium ","> Id", "Book","> Id", "Magazine","> Id");
-		msg += String.format("\033[43m|%-6s|\033[0m %-12s| %-10s| %-11s| %-10s| %-7s| %-5s| %-11s |%-6s|\n", "", "", "", "", "","","","","","");
+		msg = "\n" + String.format("\033[43m|%-4s| %-12s|%-10s | %-11s| %-10s| %-7s| %-5s| %-11s |%-6s|\033[0m\n",
+				"Number", "Regular ", "> Id ", "Premium ", "> Id", "Book", "> Id", "Magazine", "> Id");
+		msg += String.format("\033[43m|%-6s|\033[0m %-12s| %-10s| %-11s| %-10s| %-7s| %-5s| %-11s |%-6s|\n", "", "", "",
+				"", "", "", "", "", "", "");
 		for (j = 1; j <= 35; j++) {
-			user = new Regular("Regular "+j, String.valueOf(random.nextInt((int) 1e6)), date);
-			users.add(user);
-			msg+=String.format("\033[43m|%-6s|\033[0m %-12s| %-10s|", j," "+user.getName()," "+user.getID());
 
-			user = new Premium("Premium "+j, String.valueOf(random.nextInt((int) 1e6)), date);
-			users.add(user);
-			msg+=String.format("%-12s| %-10s|"," "+user.getName()," "+user.getID());
+			users.add(new Regular("Regular " + j, String.valueOf(random.nextInt((int) 1e6)), date));
+			user = users.get(users.size() - 1);
+			msg += String.format("\033[43m|%-6s|\033[0m %-12s| %-10s|", j, " " + user.getName(), " " + user.getID());
+
+			users.add(new Premium("Premium " + j, String.valueOf(random.nextInt((int) 1e6)), date));
+			user = users.get(users.size() - 1);
+			msg += String.format("%-12s| %-10s|", " " + user.getName(), " " + user.getID());
 
 			for (int i = 1; i <= 2; i++) {
 				product = (i == 1) ? "Book" : "Magazine";
 				amountPag = random.nextInt(1000) + 1;
 				type = random.nextInt(3) + 1;
 				id = generationAlfaAndHexaDecimal(i);
-				url = generationAlfaAndHexaDecimal(i)+ ".PNG";
+				url = generationAlfaAndHexaDecimal(i) + ".PNG";
 				productValue = 10000 + random.nextInt((int) 1e5);
 				// Generates dates since 1900
 				int day = random.nextInt(31) + 1;
 				int month = random.nextInt(12) + 1;
 				int year = random.nextInt(123) + 1900;
-				date.set(year, month, day);
+				date.set(year, month, day, 0, 0, 0);
 				if (i == 1) {
 					TypeBook typeBook = assignTypeBook(type);
-					bibliographic = new Book(id, product+" "+j, amountPag, date, url, productValue, typeBook, "NN");
-					msg+=String.format("%-8s| %-5s|"," "+bibliographic.getName()," "+bibliographic.getCodeId());
+					bibliographic = new Book(id, product + " " + j, amountPag, (Calendar) date.clone(), url,
+							productValue, typeBook, "NN");
+					bibliographics.add(bibliographic);
+					msg += String.format("%-8s| %-5s|", " " + bibliographic.getName(), " " + bibliographic.getCodeId());
 
 				} else {
 					emission = random.nextInt(4) + 1;
 					Emission typeEmission = assignTypeEmission(emission);
 					TypeMagazine typeMagazine = assignTypeMagazine(type);
-					bibliographic = new Magazine(id, product+" "+j, amountPag, date, url, productValue, typeEmission,
+					bibliographic = new Magazine(id, product + " " + j, amountPag, (Calendar) date.clone(), url,
+							productValue, typeEmission,
 							typeMagazine);
-					msg+=String.format("%-12s | %-5s|"," "+bibliographic.getName()," "+bibliographic.getCodeId());
-
+					bibliographics.add(bibliographic);
+					msg += String.format("%-12s | %-5s|", " " + bibliographic.getName(),
+							" " + bibliographic.getCodeId());
 				}
-				bibliographics.add(bibliographic);
-				if(j<31){//Save the first 30 products for purchase
-					products.add(bibliographic);
+
+				if (j < 33) {// Save the first 30 products for purchase
+					products.add(bibliographics.get(bibliographics.size() - 1));
 				}
 			}
-			msg+="\n";
+			msg += "\n";
 		}
-		bill=new Bill((int) 1e10, date, products);
+		bill = new Bill(productValue, date, products);
+		products.get(0).addBill(bill);
+		for (int i = 1; i < products.size(); i++) {
+			products.get(i).addBill(bill);
+		}
 		for (int i = 1; i < users.size(); i++) {
-			if(users.get(i) instanceof Premium){
+			if (users.get(i) instanceof Premium) {
 				users.get(i).addBill(bill);
 			}
 		}
-		msg+="\nPD: All premium users has bought to products with suffixes less than 30\n\n";
 		
+		msg += "\nPD: All premium users has bought to products with suffixes less than 30\n\n";
+
 		return msg;
 	}
 
@@ -392,107 +416,365 @@ public class Controller {
 	public User getCurrentUser() {
 		return currentUser;
 	}
+
 	/**
 	 * This control method verifies the type of book that is the book, and only the
 	 * purchase of products will be recorded if you are an user, or if you are
 	 * regular you can register books if you have less than 5 or magazines less than
 	 * 2. Aditional, this method verify that the regular user no do a buy bug, for
 	 * buy more of your limit
+	 * 
 	 * @param wordKey Name or ID of bibliographic products
 	 */
 	public String BuyProduct(ArrayList<String> wordKeys, double totalValue) {
-		int book=0, magazine=0;
+		int book = 0, magazine = 0;
 		Calendar buyDate = Calendar.getInstance();
-		String noSave="";
+		String noSave = "";
 		int pos = 0;
 		ArrayList<Bibliographic> products = new ArrayList<Bibliographic>();
 		Bibliographic product = null;
 		Bill bill = null;
-		msg="";
-		
-		if(currentUser instanceof Regular){//
-			book=((Regular) currentUser).counterProduct(1);
-			magazine=((Regular) currentUser).counterProduct(2);
+		msg = "";
+
+		if (currentUser instanceof Regular) {//
+			book = ((Regular) currentUser).counterProduct(1);
+			magazine = ((Regular) currentUser).counterProduct(2);
 		}
 		for (int i = 0; i < wordKeys.size(); i++) {
 			product = searchBibliographic(wordKeys.get(i));
-			if(currentUser instanceof Regular){
-				if(product instanceof Book){
+			if (currentUser instanceof Regular) {
+
+				if (product instanceof Book) {
 					book++;
-				}else{
+				} else if (product instanceof Magazine) {
 					magazine++;
 				}
 			}
-			if( (currentUser instanceof Premium ) || (product instanceof Book &&  book<=5) || (product instanceof Magazine &&  book<=2)){
+			if ((currentUser instanceof Premium)) {
 				products.add(product);
-			}
-			else{
-				noSave+="\nThis product: "+product.getName()+". It is not added by overcoming the purchase limit of this type.";
+			} else if (product instanceof Book && book <= 5) {
+				products.add(product);
+			} else if ((product instanceof Magazine && magazine <= 2)) {
+				products.add(product);
+			} else {
+				noSave += "\nThis product: " + product.getName()
+						+ ". It is not added by overcoming the purchase limit of this type.";
 			}
 		}
-		if(wordKeys.size()==0){
+		if (wordKeys.size() == 0) {
 			msg = "You don't buy products";
-		}else{
+		} else {
 			products.remove(null);
 			bill = new Bill(totalValue, buyDate, products);
+			// products.get(0).addBill(bill);
+			for (int i = 0; i < products.size(); i++) {
+				products.get(i).addBill(bill);
+			}
 			currentUser.addBill(bill);
 			msg = bill.toString();
 		}
-		
-		return msg+noSave;
+		return msg + noSave;
 	}
+
 	/**
 	 * This method verifies if the user can buy 1.Boor or Magazine if it is a
 	 * regular user, if it is Premium, it passes the test, it means that it
 	 * can*
+	 * 
 	 * @param option 1.Book or 2.Magazine
 	 * @return true: The user can Buy Prodcut bibliographic
 	 */
 	public boolean CheckingCheck(int option) {
 		boolean canBuy = false;
-		if((currentUser instanceof Premium)){
-			canBuy=true;
-		}
-		else if( option==1 && ((Regular) currentUser).counterProduct(1) < 5){
-			canBuy=true;
-		}else if( option==2&& ((Regular) currentUser).counterProduct(2) < 2){
-			canBuy=true;
+		if ((currentUser instanceof Premium)) {
+			canBuy = true;
+		} else if (option == 1 && ((Regular) currentUser).counterProduct(1) < 5) {
+			canBuy = true;
+		} else if (option == 2 && ((Regular) currentUser).counterProduct(2) < 2) {
+			canBuy = true;
 		}
 		return canBuy;
 	}
+
 	/**
-	 * This method is responsible for eliminating the subscription of a magazine 
+	 * This method is responsible for eliminating the subscription of a magazine
+	 * 
 	 * @param wordKey Name or ID of bibliographic products
 	 * @return Message that subscription stood out
 	 */
 	public String eliminateMagazineSubscrition(String wordKey) {
+		Bill billProduct = null;
 		boolean isFound = false;
-		Bibliographic product=currentUser.alreadyHasProduct(wordKey);
-		return currentUser.eliminateMagazineSuscription(product);
+		Bibliographic product = currentUser.alreadyHasProduct(wordKey);
+		// Here the current invoice that the magazine with the user is eliminated
+		billProduct = currentUser.getBill(wordKey);
+		product.getBills().remove(billProduct);
+		msg = currentUser.eliminateMagazineSuscription(product);
+		return msg;
 	}
-	
+
 	/**
-	 * The function reads a section of a product and returns a message with options for the user.
+	 * The function reads a section of a product and returns a message with options
+	 * for the user.
 	 * 
-	 * @param option a character representing the user's choice of action while reading a product (either
-	 * moving to the next page, going back to the previous page, or returning to the user menu)
-	 * @param wordKey The wordKey parameter is a String that represents the unique identifier of a
-	 * bibliographic product. It is used to retrieve the corresponding product and bill from the current
-	 * user's account.
-	 * @return The method is returning a String message that includes information about the current
-	 * reading section, the name of the product being read, the current page being read, and options for
-	 * the user to navigate to the next page, go back to the previous page, or return to the user menu.
+	 * @param option  a character representing the user's choice of action while
+	 *                reading a product (either
+	 *                moving to the next page, going back to the previous page, or
+	 *                returning to the user menu)
+	 * @param wordKey The wordKey parameter is a String that represents the unique
+	 *                identifier of a bibliographic product. It is used to retrieve the
+	 *                corresponding product and bill from the current
+	 *                user's account.
+	 * @return The method is returning a String message that includes information
+	 *         about the current
+	 *         reading section, the name of the product being read, the current page
+	 *         being read, and options for
+	 *         the user to navigate to the next page, go back to the previous page,
+	 *         or return to the user menu.
 	 */
 	public String read(char option, String wordKey) {
+		msg = "";
 		Bibliographic product = currentUser.alreadyHasProduct(wordKey);
-		Bill bill=currentUser.getBill(wordKey);
-		int pos=bill.increasePages(option, product);
-		msg = "\nReading section in process: ";
-		msg +="\nReading: " + product.getName();
-		msg+="\nReading page "+pos+" of "+product.getAmountPag()+"\n";
-		msg+="\nS.Next Page\nA.Back Page\nB.Back Menu User \n";	
-		
+		Bill bill = currentUser.getBill(wordKey);
+		int pos = bill.increasePages(option, product), init = bill.getInitPag(product);
+		int ultimePag = bill.getUltimePag(product);
+		int actualPag = bill.getReadPage(product);
+		// This conditional verifies if the user is regular, to show advertising in:
+		boolean start = (init == ultimePag); // start
+		boolean marketingBook = (actualPag - init) % 20 == 0 && product instanceof Book;// Each 20 pages of a book
+		boolean marketingMaga = ((actualPag - init) % 5 == 0 && product instanceof Magazine);// Each 5 pages of a
+																								// magazine
+		if (currentUser instanceof Regular) {
+			if (start || marketingMaga || marketingBook) {
+				String marketing[] = { "¡Suscríbete al Combo Plus y llévate Disney+ y Star+ a un precio increíble!",
+						"Ahora tus mascotas tienen una app favorita: Laika. Los mejores productos para tu peludito.",
+						"¡Estamos de aniversario! Visita tu Éxito más cercano y sorpréndete con las mejores ofertas."
+				};
+				Random random = new Random();
+				msg += "\n " + "\1 \2" + marketing[random.nextInt(3)] + "\2 \1 \n";
+			}
+		}
+		msg += "\nReading section in process: ";
+		msg += "\nReading: " + product.getName() + " - " + product.getCodeId();
+		msg += "\nReading page " + pos + " of " + product.getAmountPag() + "\n";
+		msg += "\nS.Next Page\nA.Back Page\nB.Back Menu User \n";
 		return msg;
-
 	}
+
+	public String allPageRead(String wordKey) {
+		Bibliographic product = searchBibliographic(wordKey);
+		msg = "The accompanied of notes of this ";
+		if (product instanceof Magazine) {
+			msg += "Magazine";
+		} else if (product instanceof Book) {
+			msg += "Book";
+		}
+		msg += " is: " + product.getPageRead() + "\n";
+		return msg;
+	}
+
+	
+	/**
+	 * This function counts the number of magazines in a list that match a specified type.
+	 * @param option ( 1.Varieties, 2.Desing and 3.Scientis) The option parameter is an integer value that is used to determine the type of
+	 * magazine to count. It is passed to the assignTypeMagazine() method to assign the appropriate
+	 * TypeMagazine enum value.
+	 * @return The method `counterTypeMagazine` returns an integer value, which represents the number of
+	 * magazines in the `bibliographics` list that match the specified `option` parameter.
+	 */
+	public int counterTypeMagazine(int option) {
+		int i = 0;// var counter
+		TypeMagazine type = assignTypeMagazine(option);
+		for (int j = 0; j < bibliographics.size(); j++) {
+			if (bibliographics.get(j) instanceof Magazine && type == ((Magazine) bibliographics.get(j)).getType()) {
+				i++;
+			}
+		}
+		return i;
+	}
+
+	/**
+	 * This function counts the number of books in a list of bibliographic items based on a specified
+	 * type.
+	 * 
+	 * @param option (1.Ciencie fiction, 2.Fantasy and 3.Historical novel)
+	 * The option parameter is an integer that represents the type of book to be counted. It
+	 * is used to assign a TypeBook enum value to the type variable, which is then used to compare with
+	 * the type of each Book object in the bibliographics list.
+	 * @return The method is returning an integer value, which represents the number of books in the
+	 * bibliographics list that match the specified type.
+	 */
+	public int counterTypeBook(int option) {
+		int i = 0;// var counter
+		TypeBook type = assignTypeBook(option);
+		for (int j = 0; j < bibliographics.size(); j++) {
+			if (bibliographics.get(j) instanceof Book && type == ((Book) bibliographics.get(j)).getType()) {
+				i++;
+			}
+		}
+		return i;
+	}
+	/**
+	 * This function determines the most popular type of magazine based on the
+	 * number of magazines of each
+	 * type in a list of bibliographic items.
+	 * 
+	 * @return The method is returning a String message indicating the most popular
+	 *         type of magazine based
+	 *         on the number of magazines of each type in the bibliographics list.
+	 */
+	public String magazineMorePopular() {
+		msg = "";
+		int varieties = 0, science = 0, desing = 0, maxValue = 0;
+		varieties = counterTypeBook(1);
+		desing = counterTypeBook(2);
+		science = counterTypeMagazine(3);
+		maxValue = varieties;
+		if (maxValue < science) {
+			maxValue = science;
+			msg = "The most popular type of magazine is the science magazine with an amount of " + maxValue;
+		} else if (maxValue < desing) {
+			maxValue = desing;
+			msg = "The most popular type of magazine is the design magazine with an amount of" + maxValue;
+		} else {
+			msg = "The most popular type of magazine is the varieties magazine with an amount of " + maxValue;
+		}
+		return msg;
+	}
+	/**
+	 * The function determines the most popular type of book in a list of
+	 * bibliographic items.
+	 * @return The method is returning a String message indicating the most popular
+	 *         type of book in the bibliographic list and the amount of books of that type.
+	 */
+	public String bookMorePopular() {
+		msg = "";
+		int science = 0, fantasy = 0, novel = 0, maxValue = 0;
+		science = counterTypeBook(1);
+		fantasy = counterTypeBook(2);
+		novel = counterTypeBook(3);
+		maxValue = novel;
+		if (maxValue < science) {
+			maxValue = science;
+			msg = "The most popular type of book is the science fiction with an amount of " + maxValue;
+		} else if (maxValue < fantasy) {
+			maxValue = fantasy;
+			msg = "The most popular type of book is the fantasy with an amount of " + maxValue;
+		} else {
+			msg = "The most popular type of book is the novel with an amount of " + maxValue;
+		}
+		return msg;
+	}
+	/**
+	 * The function returns the top 5 books or magazines based on the number of
+	 * pages read.
+	 * @param typeProduct An integer representing the type of product (1 for book, 2
+	 *                    for magazine) for
+	 *                    which the top 5 bibliographic items are to be retrieved.
+	 * @return The method is returning a String that contains a message with the top
+	 *         5 books or magazines
+	 *         (depending on the value of the parameter typeProduct) sorted by the
+	 *         number of pages read.
+	 */
+	public String topProductBibliographic(int typeProduct) {
+		String product = "";
+		msg = "";
+		product = (typeProduct == 1) ? "Book" : "Magazine";
+		ArrayList<Bibliographic> topBibliographic = new ArrayList<Bibliographic>();
+		// This cycle collects products according to its type in an arraylist
+		for (int i = 0; i < bibliographics.size(); i++) {
+			if (1 == typeProduct && bibliographics.get(i) instanceof Book) {
+				topBibliographic.add(bibliographics.get(i));
+			} else if (2 == typeProduct && bibliographics.get(i) instanceof Magazine) {
+				topBibliographic.add(bibliographics.get(i));
+			}
+		}
+		// This cycle orders the products based on the amount of read pages
+		for (int i = 0; i < topBibliographic.size(); i++) {
+			for (int j = 0; j < topBibliographic.size() - 1; j++) {
+				Bibliographic current = bibliographics.get(j);
+				Bibliographic next = bibliographics.get(j + 1);
+				if (current.getPageRead() < next.getPageRead()) {
+					topBibliographic.set(i, next);
+					topBibliographic.set(i + 1, current);
+				}
+			}
+		}
+		// This cycle prints the top 5 products
+		msg += "\t\3 Top 5 " + product + "s by reading pages\3\n";
+		for (int i = 0; i < 5; i++) {
+			msg += "\n" + (i + 1) + ". " + topBibliographic.get(i).getName() + "-" + topBibliographic.get(i).getCodeId()
+					+ "-Reading: " + topBibliographic.get(i).getPageRead();
+		}
+
+		return msg;
+	}
+
+	/**
+	 * The function informs about the total sales and value of each type of book in
+	 * a list of bibliographic
+	 * items.
+	 * @param option There is no parameter named "option" in the given method.
+	 * @return The method is returning a String containing information about the
+	 *         sales and total value of
+	 *         each type of book in the bibliographic list.
+	 */
+	public String informTypeBook(int option) {
+		TypeBook typeBook = null;
+		int sales = 0;
+		double valueTotal = 0;
+		msg = "";
+		for (int i = 0; i < TypeBook.values().length; i++) {
+			typeBook = assignTypeBook(i);
+			for (int j = 0; j < bibliographics.size(); j++) {
+				if (bibliographics.get(j) instanceof Book) {
+					if (typeBook == ((Book) bibliographics.get(j)).getType()) {
+						sales += ((Book) bibliographics.get(j)).getBills().size();
+						valueTotal += ((Book) bibliographics.get(j)).getValue();
+					}
+				}
+			}
+			msg += "\t\3 Information about the type of book: " + typeBook + "\3\n";
+			msg += "\4The total sales of this type of book is: " + sales + "\n";
+			msg += "\4The total value of this type of book is: " + valueTotal + "\n";
+			msg = "\n\n";
+			sales = 0;
+			valueTotal = 0;
+		}
+		return msg;
+	}
+
+	/**
+	 * This function calculates and returns information about the total sales and
+	 * value of each type of
+	 * magazine in a list of bibliographic items.
+	 * 
+	 * @return The method is returning a String containing information about the
+	 *         total sales and value of
+	 *         each type of magazine in the bibliographics list.
+	 */
+	public String informTypeMagazine() {
+		msg = "";
+		int sales = 0;
+		double valueTotal = 0;
+		for (int j = 1; j <= TypeMagazine.values().length; j++) {
+			TypeMagazine typeMagazine = assignTypeMagazine(j);
+			for (int i = 0; i < bibliographics.size(); i++) {
+				if (bibliographics.get(i) instanceof Magazine) {
+					if (typeMagazine == ((Magazine) bibliographics.get(i)).getType()) {
+						sales += ((Magazine) bibliographics.get(i)).getBills().size();
+						valueTotal += ((Magazine) bibliographics.get(i)).getValue();
+					}
+				}
+			}
+			msg += "\t\3 Information about the type of magazine: " + typeMagazine + "\3\n";
+			msg += "\4The total sales of this type of magazine is: " + sales + "\n";
+			msg += "\4The total value of this type of magazine is: " + valueTotal + "\n";
+			msg = "\n\n";
+			sales = 0;
+			valueTotal = 0;
+		}
+		return msg;
+	}
+
 }

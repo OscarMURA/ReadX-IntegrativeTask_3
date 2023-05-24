@@ -1,2 +1,3 @@
 1.Arreglar el metodo de removeBillWihtProductDelete(); en la clase User y regular, por los cambio de Bill que estan en 
-2.
+2.  Remover por posicion me retorna el objeto, remover por objeto me retorna un booleano
+3.  Existe  un parametro para retornar la posicion de un objeto

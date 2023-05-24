@@ -35,6 +35,14 @@ public class Book extends Bibliographic {
 		this.type=((Book)product).getTypeBook();
 	}
 
+	/**
+	 * The function returns the type of a book.
+	 * 
+	 * @return The method `getType()` is returning an object of type `TypeBook`.
+	 */
+	public TypeBook getType() {
+		return type;
+	}
 	
 	/**
 	 * @return the book type

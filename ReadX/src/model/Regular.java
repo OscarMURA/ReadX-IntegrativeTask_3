@@ -31,7 +31,6 @@ public class Regular extends User {
 	 */
 	public int counterProduct(int option) {
 		int amount = 0;
-		removeBillWihtProductDelete();
 		for (int i = 0; i < bills.size(); i++) {//Loop to tour Bills's arrangement
 			for (int j = 0; j < bills.get(i).getProducts().size(); j++) {//Loop to tour the arrangement of bibliographic products
 				if (option==1 && bills.get(i).getProducts().get(j) instanceof Book){
