@@ -244,8 +244,9 @@ public class Main {
 	 */
 	public String assignName(String product) {
 		String productName = "";
-		boolean repeat = false;
+		boolean repeat;
 		do {
+			repeat=false;
 			print("\n\4Exclusive! Type " + product + " name: ");
 			productName = tools.read(reader);
 
@@ -332,7 +333,7 @@ public class Main {
 		String url = "";
 		Random random = new Random();
 		String[] typeIma = { "jpeg", "png", "jpng" };
-		print("\4Type ulr exclusive: ");
+		print("\4Type ulr: ");
 		url = reader.next();
 		url = url.toUpperCase() + "." + typeIma[random.nextInt(typeIma.length)];
 		println("Your url: " + url);
@@ -551,7 +552,9 @@ public class Main {
 			print(controller.getCurrentUser().showProduct(letter));
 			print("\nCorrectly Type option: ");
 			wordKey = tools.read(reader);
-			letter = wordKey.toUpperCase().charAt(0);
+			if(wordKey.length()==1){//Conditional to verify that it is not a product with a code that starts with B
+				letter = wordKey.toUpperCase().charAt(0);
+			}
 			allow = controller.getCurrentUser().productSearched(wordKey) != null;
 		} while (((letter == 'A' || letter == 'S') || letter != 'B') && !allow);
 
