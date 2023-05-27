@@ -471,7 +471,7 @@ public class Controller {
 			products.addAll(list);
 
 			products.remove(null);
-			bill = new Bill(totalValue, buyDate, products);
+			bill = new Bill(totalValue, buyDate, products, currentUser);
 			// products.get(0).addBill(bill);
 			for (int i = 0; i < products.size(); i++) {
 				products.get(i).addBill(bill);

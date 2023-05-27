@@ -78,16 +78,10 @@ public abstract class User {
 	}
 
 	/**
-	 * This method adds the new user's bill
-	 * 
+	 * This method adds the new user's bill to the ArrayList
 	 * @param bill
 	 */
 	public void addBill(Bill bill) {
-		bills.add(bill);
-	}
-
-	public void addBill(double totalValue, Calendar dateBuy, ArrayList<Bibliographic> products) {
-		Bill bill = new Bill(totalValue, dateBuy, products);
 		bills.add(bill);
 	}
 

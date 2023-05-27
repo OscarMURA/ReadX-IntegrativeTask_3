@@ -11,7 +11,11 @@ public class Bill {
 
 	private double totalValue;
 	private Calendar dateBuy;
-	
+
+	/**
+	 * This variable is the user who made the purchase
+	 */
+	private User user;
 	/**
 	 * This arraylist keeps the current page where the user goes in each book, the
 	 * positions of the two arraylist are vinvulated
@@ -31,15 +35,19 @@ public class Bill {
 	 * @param dateBuy    buy date
 	 * @param products   all products buy for user
 	 */
-	public Bill(double totalValue, Calendar dateBuy, ArrayList<Bibliographic> products) {
+	public Bill(double totalValue, Calendar dateBuy, ArrayList<Bibliographic> products, User user) {
 		this.totalValue = totalValue;
 		this.dateBuy = dateBuy;
 		this.products = products;
+		this.user = user;
 		readPage=new ArrayList<Integer>(products.size());
 		ultimePag=new ArrayList<Integer>(products.size());
 		initPag=new ArrayList<Integer>(products.size());
 		initPages();
+
 	}
+
+
 	/**
 	 * This method verifies if there is already the bibliographic product in the
 	 * user library in this BIll
@@ -67,6 +75,13 @@ public class Bill {
 			ultimePag.add(i, 0);
 			initPag.add(i, 0);
 		}
+	}
+	/** 
+	 * This method return the user who made the purchase
+	 * @return user
+	 * */
+	public User getUser() {
+		return user;
 	}
 	/**
 	 * This method returns a digital message from all bought books
