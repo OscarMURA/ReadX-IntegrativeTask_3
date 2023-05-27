@@ -1,4 +1,5 @@
 package ui;
+
 import model.Controller;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -6,6 +7,7 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Random;
+
 /**
  * The above code defines a Java class named "Main".
  */
@@ -15,6 +17,7 @@ public class Main {
 	private static SimpleDateFormat format;
 	private static Tools tools;
 	private static String init;
+
 	/**
 	 * method builder of the main Class
 	 */
@@ -25,6 +28,7 @@ public class Main {
 		tools = new Tools();
 		init = controller.testInit();
 	}
+
 	public static void main(String[] args) {
 		Main main = new Main();
 		int option = -1;
@@ -35,7 +39,7 @@ public class Main {
 			do {
 				print("\n\4Correctly type option: ");
 				option = tools.validateInt();
-			} while (option != 1 && option != 2 && option!=0);
+			} while (option != 1 && option != 2 && option != 0);
 
 			if (option == 1) {
 				do {
@@ -75,6 +79,7 @@ public class Main {
 			}
 		} while (option != 0);
 	}
+
 	/**
 	 * This method shows the different types of menus
 	 * 
@@ -85,7 +90,7 @@ public class Main {
 		if (option == 1) {
 			tools.title("Manager Section");
 			println("\t\4 1. Register Bibliographic products\n\t\4 2.Modify Bibliograpic product\n\t\4 3.Delete Bibliographic Products");
-			println("\t\4 4.Show the test Init\n\t\4 0.Back");
+			println("\t\4 4.Show the test Init\n\t\4 5.Report Generetion\n\t\4 0.Back");
 		} else if (option == 2) {
 			tools.title("User section");
 			println("\n\4 1. Register User\n\4 2.Login User\n\4 0.Back");
@@ -109,8 +114,10 @@ public class Main {
 		}
 		return allow;
 	}
+
 	/**
 	 * METHOD FOR MANAGE OPTIONS
+	 * 
 	 * @param option 1.Register 2.Modify 3.Delete 4.Show TestInit
 	 */
 	public void executionManager(int option) {
@@ -123,8 +130,10 @@ public class Main {
 				tools.title("Initial test");
 				println(init);
 			}
+			case 5->reportGeneration();
 		}
 	}
+
 	/**
 	 * Control method for user options
 	 * 
@@ -137,6 +146,7 @@ public class Main {
 			case 3 -> read();
 		}
 	}
+
 	/**
 	 * println Method
 	 * 
@@ -145,6 +155,7 @@ public class Main {
 	public static void println(Object println) {
 		System.out.println(println);
 	}
+
 	/**
 	 * print Method
 	 * 
@@ -153,8 +164,10 @@ public class Main {
 	public static void print(Object print) {
 		System.out.print(print);
 	}
+
 	/**
-	 * This function registers a user by prompting for their name, unique ID, and user type (regular or
+	 * This function registers a user by prompting for their name, unique ID, and
+	 * user type (regular or
 	 * premium) and then calling the registerUser method in the controller class.
 	 * 
 	 * @return The method is returning a boolean value of true.
@@ -183,6 +196,7 @@ public class Main {
 		println(msg);
 		return true;
 	}
+
 	/**
 	 * This method records the bibliographic products, according to the type of book
 	 * that the user wants to appear options for such own regitters
@@ -223,7 +237,8 @@ public class Main {
 	}
 
 	/**
-	 * This view method assign the name of the product 
+	 * This view method assign the name of the product
+	 * 
 	 * @param product Type product ("Book" or "Magazine")
 	 * @return product name
 	 */
@@ -240,8 +255,10 @@ public class Main {
 		} while (repeat);
 		return productName;
 	}
+
 	/**
 	 * This view method assign the amount pag of the product
+	 * 
 	 * @param product Type product ("Book" or "Magazine")
 	 * @return product Amount page
 	 */
@@ -253,8 +270,10 @@ public class Main {
 		} while (amountPag <= 0);
 		return amountPag;
 	}
+
 	/**
 	 * This view method assign the value of the product
+	 * 
 	 * @param product Type product ("Book" or "Magazine")
 	 * @return product value
 	 */
@@ -266,8 +285,10 @@ public class Main {
 		} while (productValue < 0 || productValue == Integer.MAX_VALUE);
 		return productValue;
 	}
+
 	/**
 	 * This view method assign the each product type
+	 * 
 	 * @param product "Book" or "Magazine"
 	 * @param option  1.Book or 2.Magazine
 	 * @return product type such as option number
@@ -289,8 +310,10 @@ public class Main {
 		} while (type <= 0 || type >= 4);
 		return type;
 	}
+
 	/**
 	 * This view method assign the emission of the Magazine
+	 * 
 	 * @param product Type product ("Book" or "Magazine")
 	 * @return emission Type of the Magazine
 	 */
@@ -304,20 +327,23 @@ public class Main {
 		} while (emission <= 0 || emission >= 5);
 		return emission;
 	}
+
 	public String assignUrl() {
 		String url = "";
 		Random random = new Random();
-		String[] typeIma = { "jpeg", "png", "jpng"};
+		String[] typeIma = { "jpeg", "png", "jpng" };
 		print("\4Type ulr exclusive: ");
 		url = reader.next();
 		url = url.toUpperCase() + "." + typeIma[random.nextInt(typeIma.length)];
 		println("Your url: " + url);
 		return url;
 	}
+
 	/**
 	 * Prompts the user to enter a date in the format "dd/MM/yyyy",
 	 * and tools.validates the input to ensure that it is a valid date. Returns
-	 * a Calendar object representing the date entered by the user. 
+	 * a Calendar object representing the date entered by the user.
+	 * 
 	 * @return A Calendar object representing the date entered by the user.
 	 */
 	public Calendar assingDate() {
@@ -338,11 +364,12 @@ public class Main {
 			}
 			if (!(dateCal.before(now)) && follow) {
 				println("\tYou must enter the date, at the moment you cannot place products without premiere");
-				follow=false;
+				follow = false;
 			}
 		} while (!follow);
 		return dateCal;
 	}
+
 	/**
 	 * This view method is for Modify bibliographic products
 	 */
@@ -396,6 +423,7 @@ public class Main {
 		}
 		println("\n\n" + msg);
 	}
+
 	/**
 	 * This view method is for delete bibliographic products
 	 */
@@ -412,8 +440,10 @@ public class Main {
 		}
 		println(msg);
 	}
+
 	/**
-	 * This method focuses on looking for the user, to start in a registered account 
+	 * This method focuses on looking for the user, to start in a registered account
+	 * 
 	 * @return True: the user exists, or false: the user does not exist
 	 */
 	public static boolean searchUser() {
@@ -431,24 +461,27 @@ public class Main {
 
 		return isFound;
 	}
+
 	/**
-	 * This method of view focuses on receiving and entering the information to proceed to the purchase of bibliographic products from a specific user
+	 * This method of view focuses on receiving and entering the information to
+	 * proceed to the purchase of bibliographic products from a specific user
 	 */
 	public void BuyBibliographicProduct() {
 		ArrayList<String> wordKeys = new ArrayList<String>();
 		String wordKey = "", type = "", msg = "";
 		int intance = 0;
 		double value = 0, realValue = 0, totalValue = 0;
-		
+
 		tools.lines();
 		tools.title("Buy Product Bibliographic");
 		do {
-			print("Correctly typoe code or name (Save buy=\"0\"): ");
+			print("Correctly type code or name (Save buy=\"0\"): ");
 			wordKey = tools.read(reader);
-			//Conditional that verifies that this product exists and that not save buy
+			// Conditional that verifies that this product exists and that not save buy
 			if (controller.searchBibliographic(wordKey) != null && !(wordKey.equals("0"))) {
 				// conditional not to buy a product twice
-				if (controller.getCurrentUser().alreadyHasProduct(wordKey) != null || wordKeys.contains(wordKey.toUpperCase())) {
+				if (controller.getCurrentUser().alreadyHasProduct(wordKey) != null
+						|| wordKeys.contains(wordKey.toUpperCase())) {
 					println("You already have this book");
 				} else {
 					intance = controller.intanceOfBibliographic(wordKey);
@@ -468,17 +501,19 @@ public class Main {
 						totalValue += value;
 						wordKeys.add(wordKey.toUpperCase());// Add the names of the products to names
 					} else {
-						println("You can't buy this product: "+wordKey+" "+type+" The library of this type is filled");
+						println("You can't buy this product: " + wordKey + " " + type
+								+ " The library of this type is filled");
 					}
 				}
-				
+
 			} else if (!(wordKey.equals("0"))) {
 				println("No exist the product: " + wordKey);
 			}
 		} while (!(wordKey.equals("0")));
-		msg=controller.BuyProduct(wordKeys, totalValue);
+		msg = controller.BuyProduct(wordKeys, totalValue);
 		println(msg);
 	}
+
 	/**
 	 * The view method is to eliminate subscriptions with user magazines
 	 */
@@ -490,7 +525,8 @@ public class Main {
 		wordKey = tools.read(reader);
 		if (controller.getCurrentUser().alreadyHasProduct(wordKey) != null) {
 			if (controller.intanceOfBibliographic(wordKey) == 2) {
-				print(controller.eliminateMagazineSubscrition(wordKey));;
+				print(controller.eliminateMagazineSubscrition(wordKey));
+				;
 			} else {
 				println("This product not is a Magazine");
 			}
@@ -498,44 +534,70 @@ public class Main {
 			println("No exist this Product in your library");
 		}
 	}
+
 	/**
-	 *This method is responsible for simulating the sensation of reading 
-	 any bibliographic product that the user possesses
+	 * This method is responsible for simulating the sensation of reading
+	 * any bibliographic product that the user possesses
 	 */
 	public void read() {
 		String wordKey = "";
 		String option = "";
-		boolean allow=false;
+		boolean allow = false;
 		tools.lines();
-		char letter=0;
-		tools.title(controller.getCurrentUser().getName()+"'s Library");
+		char letter = 0;
+		tools.title(controller.getCurrentUser().getName() + "'s Library");
 		println("Product: ");
 		do {
 			print(controller.getCurrentUser().showProduct(letter));
 			print("\nCorrectly Type option: ");
-			wordKey=tools.read(reader);
-			letter=wordKey.toUpperCase().charAt(0);
-			allow=controller.getCurrentUser().productSearched(wordKey)!=null;
-		} while ((( letter=='A' || letter=='S' ) || letter!='B') && !allow);
-		
-		if (letter!='B' && allow) {
-			wordKey=controller.getCurrentUser().productSearched(wordKey).getName();
+			wordKey = tools.read(reader);
+			letter = wordKey.toUpperCase().charAt(0);
+			allow = controller.getCurrentUser().productSearched(wordKey) != null;
+		} while (((letter == 'A' || letter == 'S') || letter != 'B') && !allow);
+
+		if (letter != 'B' && allow) {
+			wordKey = controller.getCurrentUser().productSearched(wordKey).getName();
 			do {
-				String msg=controller.read(letter, wordKey);
+				String msg = controller.read(letter, wordKey);
 				println(msg);
 				do {
 					print("Correctly type: ");
 					option = reader.next();
-					letter=option.toUpperCase().charAt(0);
-				} while (letter!='A' && letter != 'S' && letter !='B');
+					letter = option.toUpperCase().charAt(0);
+				} while (letter != 'A' && letter != 'S' && letter != 'B');
 
 			} while (letter != 'B');
 
-		} else if(wordKey.toUpperCase().charAt(0)!='B') {
+		} else if (wordKey.toUpperCase().charAt(0) != 'B') {
 			println("Product not exits in your library :C");
 		}
 		controller.getCurrentUser().posBoxInit();
 	}
 
-	 
+	/**
+	 * This function displays a menu of report generation options and allows the user to select an option
+	 * to generate a report based on the library's bibliographic products.
+	 */
+	public void reportGeneration() {
+		int option = 0;
+		tools.lines();
+		do {
+			tools.title("Report Generation");
+			println("\t1. Show the total read pages of the bibliographic products");
+			println("\t2.Show the gender and category more Popular the bibliographic products");
+			println("\t3.Show top 5 of the most read products(books and magazines)");
+			println("\t4.Show the book more popular of each gender");
+			println("\t5.Show the magazine more pupular of each category");
+			println("\t0.Back Menu");
+
+			print("Correctly type option: ");
+			do {
+				option = tools.validateInt();
+			} while (option < 0 || option > 5);
+			
+			println(controller.reportGeneration(option));
+		} while (option != 0);
+
+	}
+
 }

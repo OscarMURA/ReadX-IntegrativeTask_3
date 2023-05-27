@@ -38,6 +38,9 @@ public class Tools {
 	}
 
 	
+	/**
+	 * The function prints a colored line pattern.
+	 */
 	public void lines() {
 		System.out.println("\033[47;35m"
 				+ "\n\3\3------------\4\4------------\3\3------------\4\4------------\3\3------------\4\4------------\3\3\033[0m\n");

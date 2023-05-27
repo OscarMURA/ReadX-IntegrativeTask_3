@@ -2,6 +2,8 @@ package model;
 
 import java.util.Calendar;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 /**
  * It is the controller from the border and the program, and who performs all
@@ -339,7 +341,7 @@ public class Controller {
 		Bibliographic bibliographic = null;
 		User user = null;
 		Bill bill = null;
-		ArrayList<Bibliographic> products = new ArrayList<Bibliographic>();
+		ArrayList<String> products = new ArrayList<String>();
 
 		msg = "\n" + String.format("\033[43m|%-4s| %-12s|%-10s | %-11s| %-10s| %-7s| %-5s| %-11s |%-6s|\033[0m\n",
 				"Number", "Regular ", "> Id ", "Premium ", "> Id", "Book", "> Id", "Magazine", "> Id");
@@ -387,22 +389,18 @@ public class Controller {
 				}
 
 				if (j < 33) {// Save the first 30 products for purchase
-					products.add(bibliographics.get(bibliographics.size() - 1));
+					products.add(bibliographics.get(bibliographics.size() - 1).getName());
 				}
 			}
 			msg += "\n";
 		}
-		bill = new Bill(productValue, date, products);
-		products.get(0).addBill(bill);
-		for (int i = 1; i < products.size(); i++) {
-			products.get(i).addBill(bill);
-		}
-		for (int i = 1; i < users.size(); i++) {
-			if (users.get(i) instanceof Premium) {
-				users.get(i).addBill(bill);
-			}
-		}
-		
+
+		for (int i = 0; i < users.size(); i++) {
+			currentUser=users.get(i);
+			if(currentUser instanceof Premium ){
+				BuyProduct(products, 1000000);
+			}	
+		}		
 		msg += "\nPD: All premium users has bought to products with suffixes less than 30\n\n";
 
 		return msg;
@@ -434,7 +432,7 @@ public class Controller {
 		ArrayList<Bibliographic> products = new ArrayList<Bibliographic>();
 		Bibliographic product = null;
 		Bill bill = null;
-		msg = "";
+		String msg = "";
 
 		if (currentUser instanceof Regular) {//
 			book = ((Regular) currentUser).counterProduct(1);
@@ -461,9 +459,17 @@ public class Controller {
 						+ ". It is not added by overcoming the purchase limit of this type.";
 			}
 		}
+		
 		if (wordKeys.size() == 0) {
 			msg = "You don't buy products";
 		} else {
+			
+			//This method removes the repeated products
+			HashSet<Bibliographic> set=new HashSet<>(products);
+			List<Bibliographic> list=new ArrayList<>(set);
+			products.clear();
+			products.addAll(list);
+
 			products.remove(null);
 			bill = new Bill(totalValue, buyDate, products);
 			// products.get(0).addBill(bill);
@@ -475,11 +481,10 @@ public class Controller {
 		}
 		return msg + noSave;
 	}
-
 	/**
 	 * This method verifies if the user can buy 1.Boor or Magazine if it is a
 	 * regular user, if it is Premium, it passes the test, it means that it
-	 * can*
+	 * can buy
 	 * 
 	 * @param option 1.Book or 2.Magazine
 	 * @return true: The user can Buy Prodcut bibliographic
@@ -561,15 +566,26 @@ public class Controller {
 		return msg;
 	}
 
-	public String allPageRead(String wordKey) {
-		Bibliographic product = searchBibliographic(wordKey);
-		msg = "The accompanied of notes of this ";
-		if (product instanceof Magazine) {
-			msg += "Magazine";
-		} else if (product instanceof Book) {
-			msg += "Book";
+	
+	/**
+	 * The function calculates and returns the total number of pages read in books and magazines.
+	 * 
+	 * @return The method is returning a String message that displays the total number of pages read in
+	 * magazines and books.
+	 */
+	private String allPageRead() {
+		int allReadBook = 0;
+		int allReadMagazine = 0;
+		msg="";
+		for (int i = 0; i < bibliographics.size(); i++) {
+			if (bibliographics.get(i) instanceof Book) {
+				allReadBook+=((Book) bibliographics.get(i)).getPageRead();
+			}else if(bibliographics.get(i) instanceof Magazine) {
+				allReadMagazine+=((Magazine) bibliographics.get(i)).getPageRead();
+			}
 		}
-		msg += " is: " + product.getPageRead() + "\n";
+		msg += "The total number of pages read in the Magazines is: " + allReadMagazine + "\n";
+		msg += "The total number of pages read in the books is: " + allReadBook + "\n";
 		return msg;
 	}
 
@@ -582,12 +598,12 @@ public class Controller {
 	 * @return The method `counterTypeMagazine` returns an integer value, which represents the number of
 	 * magazines in the `bibliographics` list that match the specified `option` parameter.
 	 */
-	public int counterTypeMagazine(int option) {
+	private int counterTypeMagazine(int option) {
 		int i = 0;// var counter
 		TypeMagazine type = assignTypeMagazine(option);
 		for (int j = 0; j < bibliographics.size(); j++) {
 			if (bibliographics.get(j) instanceof Magazine && type == ((Magazine) bibliographics.get(j)).getType()) {
-				i++;
+				i+=bibliographics.get(j).getPageRead();
 			}
 		}
 		return i;
@@ -604,30 +620,29 @@ public class Controller {
 	 * @return The method is returning an integer value, which represents the number of books in the
 	 * bibliographics list that match the specified type.
 	 */
-	public int counterTypeBook(int option) {
+	private int counterTypeBook(int option) {
 		int i = 0;// var counter
 		TypeBook type = assignTypeBook(option);
 		for (int j = 0; j < bibliographics.size(); j++) {
 			if (bibliographics.get(j) instanceof Book && type == ((Book) bibliographics.get(j)).getType()) {
-				i++;
+				i+=bibliographics.get(j).getAmountPag();
 			}
 		}
 		return i;
 	}
 	/**
 	 * This function determines the most popular type of magazine based on the
-	 * number of magazines of each
-	 * type in a list of bibliographic items.
+	 * number of magazines of each type in a list of bibliographic items.
 	 * 
 	 * @return The method is returning a String message indicating the most popular
 	 *         type of magazine based
 	 *         on the number of magazines of each type in the bibliographics list.
 	 */
-	public String magazineMorePopular() {
+	private String magazineMorePopular() {
 		msg = "";
 		int varieties = 0, science = 0, desing = 0, maxValue = 0;
-		varieties = counterTypeBook(1);
-		desing = counterTypeBook(2);
+		varieties = counterTypeMagazine(1);
+		desing = counterTypeMagazine(2);
 		science = counterTypeMagazine(3);
 		maxValue = varieties;
 		if (maxValue < science) {
@@ -647,7 +662,7 @@ public class Controller {
 	 * @return The method is returning a String message indicating the most popular
 	 *         type of book in the bibliographic list and the amount of books of that type.
 	 */
-	public String bookMorePopular() {
+	private String bookMorePopular() {
 		msg = "";
 		int science = 0, fantasy = 0, novel = 0, maxValue = 0;
 		science = counterTypeBook(1);
@@ -665,22 +680,19 @@ public class Controller {
 		}
 		return msg;
 	}
+
 	/**
-	 * The function returns the top 5 books or magazines based on the number of
-	 * pages read.
-	 * @param typeProduct An integer representing the type of product (1 for book, 2
-	 *                    for magazine) for
-	 *                    which the top 5 bibliographic items are to be retrieved.
-	 * @return The method is returning a String that contains a message with the top
-	 *         5 books or magazines
-	 *         (depending on the value of the parameter typeProduct) sorted by the
-	 *         number of pages read.
+	 * The function sorts a list of bibliographic items based on the amount of read pages, filtered by
+	 * type of product.
+	 * 
+	 * @param typeProduct The type of product to be sorted. It can be either 1 for books or 2 for
+	 * magazines.
+	 * @return The method is returning an ArrayList of Bibliographic objects sorted by the amount of read
+	 * pages, filtered by the type of product specified by the parameter "typeProduct".
 	 */
-	public String topProductBibliographic(int typeProduct) {
-		String product = "";
-		msg = "";
-		product = (typeProduct == 1) ? "Book" : "Magazine";
+	private ArrayList<Bibliographic> bubbleSortProduct(int typeProduct){
 		ArrayList<Bibliographic> topBibliographic = new ArrayList<Bibliographic>();
+
 		// This cycle collects products according to its type in an arraylist
 		for (int i = 0; i < bibliographics.size(); i++) {
 			if (1 == typeProduct && bibliographics.get(i) instanceof Book) {
@@ -691,40 +703,56 @@ public class Controller {
 		}
 		// This cycle orders the products based on the amount of read pages
 		for (int i = 0; i < topBibliographic.size(); i++) {
-			for (int j = 0; j < topBibliographic.size() - 1; j++) {
-				Bibliographic current = bibliographics.get(j);
-				Bibliographic next = bibliographics.get(j + 1);
+			for (int j = 0; j < topBibliographic.size() - i-1; j++) {
+				Bibliographic current = topBibliographic.get(j);
+				Bibliographic next = topBibliographic.get(j + 1);
 				if (current.getPageRead() < next.getPageRead()) {
-					topBibliographic.set(i, next);
-					topBibliographic.set(i + 1, current);
+					topBibliographic.set(j, next);
+					topBibliographic.set(j + 1, current);
 				}
 			}
 		}
-		// This cycle prints the top 5 products
-		msg += "\t\3 Top 5 " + product + "s by reading pages\3\n";
-		for (int i = 0; i < 5; i++) {
-			msg += "\n" + (i + 1) + ". " + topBibliographic.get(i).getName() + "-" + topBibliographic.get(i).getCodeId()
-					+ "-Reading: " + topBibliographic.get(i).getPageRead();
-		}
-
-		return msg;
+		
+		return topBibliographic;
 	}
 
 	/**
-	 * The function informs about the total sales and value of each type of book in
-	 * a list of bibliographic
-	 * items.
-	 * @param option There is no parameter named "option" in the given method.
-	 * @return The method is returning a String containing information about the
-	 *         sales and total value of
-	 *         each type of book in the bibliographic list.
+	 * The function returns a formatted string displaying the top 5 books and magazines based on their
+	 * page reads and code IDs.
+	 * 
+	 * @return The method is returning a String that contains the top 5 books and top 5 magazines sorted
+	 * by the number of pages read.
 	 */
-	public String informTypeBook(int option) {
+	private String top5BibliographicProduct(){
+		msg="";
+		ArrayList<Bibliographic> book = bubbleSortProduct(1);
+		ArrayList<Bibliographic> magazine = bubbleSortProduct(2);
+		msg+="\t\4Top 5 Books\n\n";
+		msg+=String.format("| %-3s|%-12s|%-3s|%-8s|", "Top","  Book",">Id","  Reads " );
+		msg+="\n";
+		for (int i = 0; i < 5; i++) {
+			msg+=String.format("| %-3s|%-12s|%-3s|%-8s|\n",i+1," "+book.get(i).getName(),book.get(i).getCodeId(),book.get(i).getPageRead());
+		}
+		msg+="\n\t\4Top 5 Magazines\n\n";
+		msg+=String.format("| %-3s|%-12s|%-3s|%-8s|\n", "Top"," Magazine",">Id","  Reads " );
+		for (int i = 0; i < 5; i++) {
+			msg+=String.format("| %-3s|%-12s|%-3s|%-8s|\n",i+1," "+magazine.get(i).getName(),magazine.get(i).getCodeId(),magazine.get(i).getPageRead());
+		}
+		return msg;
+
+	}
+	/**
+	 * The function informs about the total sales and value of each type of book in
+	 * a list of bibliographic items.
+	 * @return The method is returning a String containing information about the
+	 *         sales and total value of each type of book in the bibliographic list.
+	 */
+	private String informTypeBook() {
 		TypeBook typeBook = null;
 		int sales = 0;
 		double valueTotal = 0;
-		msg = "";
-		for (int i = 0; i < TypeBook.values().length; i++) {
+		msg = "\n\n";
+		for (int i = 1; i <= 3; i++) {
 			typeBook = assignTypeBook(i);
 			for (int j = 0; j < bibliographics.size(); j++) {
 				if (bibliographics.get(j) instanceof Book) {
@@ -734,10 +762,10 @@ public class Controller {
 					}
 				}
 			}
-			msg += "\t\3 Information about the type of book: " + typeBook + "\3\n";
+			msg += "\t\4 Information about the type of book: " + typeBook + "\3\n";
 			msg += "\4The total sales of this type of book is: " + sales + "\n";
 			msg += "\4The total value of this type of book is: " + valueTotal + "\n";
-			msg = "\n\n";
+			msg += "\n\n";
 			sales = 0;
 			valueTotal = 0;
 		}
@@ -753,11 +781,11 @@ public class Controller {
 	 *         total sales and value of
 	 *         each type of magazine in the bibliographics list.
 	 */
-	public String informTypeMagazine() {
-		msg = "";
+	private String informTypeMagazine() {
+		msg = "\n\n";
 		int sales = 0;
 		double valueTotal = 0;
-		for (int j = 1; j <= TypeMagazine.values().length; j++) {
+		for (int j = 1; j <= 3; j++) {
 			TypeMagazine typeMagazine = assignTypeMagazine(j);
 			for (int i = 0; i < bibliographics.size(); i++) {
 				if (bibliographics.get(i) instanceof Magazine) {
@@ -767,14 +795,36 @@ public class Controller {
 					}
 				}
 			}
-			msg += "\t\3 Information about the type of magazine: " + typeMagazine + "\3\n";
+			msg += "\t\3 Information about the type of magazine: " + typeMagazine + " \3\n";
 			msg += "\4The total sales of this type of magazine is: " + sales + "\n";
 			msg += "\4The total value of this type of magazine is: " + valueTotal + "\n";
-			msg = "\n\n";
+			msg += "\n\n";
 			sales = 0;
 			valueTotal = 0;
 		}
 		return msg;
 	}
+	/**
+ 	* The function generates a report based on the option selected and returns a message.
+ 	* 
+ 	* @param option The parameter "option" is an integer value that is used to determine which report to
+ 	* generate. The value of "option" is passed as an argument to the "reportGeneration" method, and based
+ 	* on its value, the method generates a specific report. The possible values of "option" are
+ 	* @return The method `reportGeneration` returns a `String` value.
+ 	*/
+	public String reportGeneration(int option){
+		msg="";
+		switch (option) {
+			case 1->msg=allPageRead();
+			case 2->msg=bookMorePopular()+"\n\n"+magazineMorePopular();
+			case 3->msg=top5BibliographicProduct();
+			case 4->msg=informTypeBook();
+			case 5->msg=informTypeMagazine();
+			case 0->msg="\n...\n";
+		}
+		return msg;
+	}
+	
+	
 
 }

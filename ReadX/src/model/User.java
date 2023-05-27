@@ -150,6 +150,8 @@ public abstract class User {
 	private void organizeBibliographicProducts() {
 		myShelves=new ArrayList<Bibliographic[][]>();
 		ArrayList<Bibliographic> products = new ArrayList<Bibliographic>();
+		Bibliographic[][] shelves=new Bibliographic[5][5];
+
 		// This loop has the purpose of collecting all the products that the user
 		for (int i = 0; i < bills.size(); i++) {
 			for (int j = 0; j < bills.get(i).getProducts().size(); j++) {
@@ -170,8 +172,8 @@ public abstract class User {
 		//Amount Bibliographic products shelves (Matrix)
 		int box=(int ) Math.ceil((double)products.size()/25);
 		//Aux
-		Bibliographic[][] shelves=new Bibliographic[5][5];
 		int l = 0;
+
 		//This loop saves the books on shelves
 		while (l<products.size() && !(box==myShelves.size())) {
 			for (int i = 0; i <5 && l<products.size(); i++) {
@@ -182,6 +184,9 @@ public abstract class User {
 			myShelves.add(shelves);
 			shelves=new Bibliographic[5][5];
 		} 
+		if(products.size()==0){
+			myShelves.add(shelves);
+		}
 	}
 	/**
  	* This function displays a table of bibliographic products (books and magazines) organized in shelves
@@ -244,7 +249,7 @@ public abstract class User {
 		Bibliographic product = null;
 		int x = 0;
 		int y = 0;		
-		if (Character.isDigit(wordKey.charAt(0)) && wordKey.charAt(1)=='-' &&wordKey.length()>2 &&Character.isDigit(wordKey.charAt(2))) {
+		if (Character.isDigit(wordKey.charAt(0)) &&wordKey.length()>2 && wordKey.charAt(1)=='-'  &&Character.isDigit(wordKey.charAt(2))) {
 			x = Character.getNumericValue( wordKey.charAt(0));
 			y = Character.getNumericValue(wordKey.charAt(2));
 			if (x < 5 && y<5) {
