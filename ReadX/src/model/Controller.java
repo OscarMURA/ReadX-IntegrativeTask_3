@@ -102,6 +102,8 @@ public class Controller {
 				typeBook = assignTypeBook(type);
 				bibliographic = new Book(codeId, name, amountPag, datePublication, url, value, typeBook, review);
 				msg += "\nsuch as a Book ";
+				msg += ". Aditional, its code Hexadecimal is " + codeId;
+
 			}
 			case 2 -> {
 				TypeMagazine typeMagazine = null;
@@ -111,10 +113,11 @@ public class Controller {
 				bibliographic = new Magazine(codeId, name, amountPag, datePublication, url, value, typeEmmision,
 						typeMagazine);
 				msg += "\nsuch as a Magazine ";
+				msg += ". Aditional, its code Alphanumeric is " + codeId;
+
 			}
 		}
 		this.bibliographics.add(bibliographic);
-		msg += ". Aditional, its code Hexadecimal is " + codeId;
 		return msg;
 	}
 
@@ -625,7 +628,7 @@ public class Controller {
 		TypeBook type = assignTypeBook(option);
 		for (int j = 0; j < bibliographics.size(); j++) {
 			if (bibliographics.get(j) instanceof Book && type == ((Book) bibliographics.get(j)).getType()) {
-				i+=bibliographics.get(j).getAmountPag();
+				i+=bibliographics.get(j).getPageRead();
 			}
 		}
 		return i;
