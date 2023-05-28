@@ -1,4 +1,6 @@
 Repositorio:  https://github.com/OscarMURA/ReadX-IntegrativeTask_3
 
-video:  https://youtu.be/dSpE8bXAIm4
+Primera version del programa:  https://youtu.be/dSpE8bXAIm4
+
+Segunda version del programa con el video: https://drive.google.com/file/d/1RNbkkdsInCtdYzaU7ioWQ8OyOh1gS-qh/view?usp=sharing
 
